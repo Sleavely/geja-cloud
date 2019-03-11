@@ -1,0 +1,23 @@
+{
+  "extends": "standard",
+  "rules": {
+    "comma-dangle": [
+      "warn",
+      "only-multiline"
+    ],
+    "eqeqeq": "warn",
+    "func-call-spacing": "off",
+    "no-eval": "off",
+    "no-multiple-empty-lines": "off",
+    "no-trailing-spaces": [
+      "error",
+      {
+        "skipBlankLines": true
+      }
+    ],
+    "prefer-promise-reject-errors": "off"
+  },
+  "env": {
+    "jest": true
+  }
+}
