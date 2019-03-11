@@ -1,0 +1,40 @@
+{
+  "name": "geja-cloud",
+  "version": "0.0.1",
+  "description": "A serverless webshop",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose test/ && eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://git@bitbucket.org/Sleavely/geja-cloud.git"
+  },
+  "keywords": [
+    "ecommerce",
+    "stripe",
+    "contentful",
+    "mailgun"
+  ],
+  "author": "Joakim Hedlund <contact@joakimhedlund.com>",
+  "license": "to kill",
+  "homepage": "https://bitbucket.org/Sleavely/geja-cloud",
+  "devDependencies": {
+    "aws-sdk": "^2.400.0",
+    "eslint": "^5.13.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.1.0"
+  },
+  "dependencies": {
+    "contentful": "^7.4.0",
+    "dotenv": "^6.2.0",
+    "lambda-api": "^0.10.1",
+    "mailgun-js": "^0.22.0",
+    "resentful": "^1.0.0",
+    "stripe": "^6.25.1"
+  }
+}
