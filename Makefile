@@ -1,7 +1,9 @@
-ENVIRONMENT        ?= dev
-PROJECT             = geja
+ENVIRONMENT        ?= $(shell grep -E "^ENVIRONMENT=.+$$" .env | cut -d '=' -f2)
+PROJECT             = $(shell grep -E "^PROJECT=.+$$" .env | cut -d '=' -f2)
 AWS_DEFAULT_REGION ?= eu-west-1
-TAGS = Environment=$(ENVIRONMENT) Project=$(PROJECT)
+BRANCH_NAME = $(shell git branch | grep \* | cut -d ' ' -f2)
+COMMIT_HASH = $(shell git log -1 --format=%h)
+TAGS = Environment=$(ENVIRONMENT) Project=$(PROJECT) GitBranch=$(BRANCH_NAME) GitCommit=$(COMMIT_HASH)
 ARTIFACTS_BUCKET = irish-luck
 
 package = aws cloudformation package \
@@ -14,8 +16,7 @@ deploy = aws cloudformation deploy --template-file dist/cloudformation.dist.yml 
     --stack-name $(PROJECT)-$(ENVIRONMENT) \
     --region $(AWS_DEFAULT_REGION) \
     --parameter-overrides \
-      Environment=$(ENVIRONMENT) \
-      Project=$(PROJECT) \
+      $(shell grep -E "^.+=.+$$" .env | sed 's/_//g') \
     --tags $(TAGS) \
     --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --s3-bucket $(ARTIFACTS_BUCKET) \
