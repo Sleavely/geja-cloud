@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: 'AWS::Serverless-2016-10-31'
+
+Parameters:
+  PROJECT:
+    Type: String
+  ENVIRONMENT:
+    Type: String
+
+Globals:
+  Function:
+    Runtime: nodejs8.10
+    Timeout: 30
+    Handler: index.handler
+    Environment:
+      Variables:
+        API_BASE_PATH: !Sub ${PROJECT}
+        ENVIRONMENT: !Sub ${ENVIRONMENT}
+        LOG_LEVEL: warn
+
+Resources:
+  # Api Gateway
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub ${PROJECT}-${ENVIRONMENT}
+      StageName: !Ref Environment
+      Cors:
+        AllowMethods: "'POST, GET, OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+  BasePath:
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties:
+      BasePath: !Sub ${PROJECT}
+      DomainName: aws.triplehead.net
+      RestApiId: !Ref ApiGateway
+      Stage: !Ref ApiGateway.Stage
+
+  # Lambda Functions
+  ApiHandlerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${PROJECT}-${ENVIRONMENT}
+      CodeUri: 'dist/src/'
+      Handler: 'lambda.handler'
+      Environment:
+        Variables:
+          STRIPE_PUBLISHABLE_KEY: !Sub aaa111
+          STRIPE_SECRET_KEY: !Sub bbb222
+          CONTENTFUL_SPACE_ID: !Sub ccc333
+          CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ddd444
+          MAILGUN_APIKEY: !Sub eee555
+
+      Events:
+        HttpReqBase:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /
+            Method: ANY
+        HttpReqProxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /{proxy+}
+            Method: ANY
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            -
+              Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+              Resource:
+                - !Sub arn:aws:dynamodb:${AWS::Region}:*:table/${PROJECT}-orders-${ENVIRONMENT}

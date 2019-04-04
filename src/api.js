@@ -1,6 +1,8 @@
 
 require('dotenv').config()
 const {
+  API_BASE_PATH = '',
+  LOG_LEVEL = 'warn',
   STRIPE_PUBLISHABLE_KEY,
   STRIPE_SECRET_KEY,
   CONTENTFUL_SPACE_ID,
@@ -18,14 +20,20 @@ const Resentful = require('resentful')
 const resentful = new Resentful()
 
 // Require the framework and instantiate it
-const api = require('lambda-api')({ logger: true })
+const api = require('lambda-api')({
+  base: API_BASE_PATH,
+  logger: {
+    level: LOG_LEVEL,
+    access: true,
+    detail: false,
+    timestamp: false,
+    stack: true,
+  },
+})
 
 // Add CORS headers
 api.options('/*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-  res.status(200).send({})
+  res.cors().send({})
 })
 
 api.get('/token', async (req, res) => {
@@ -79,9 +87,18 @@ api.get('/routes', async () => {
   return api.routes()
 })
 
-// Catch-all
-api.get('/*', async (req, res) => {
-  return { message: 'Hello world!' }
-})
+// Catch-all doesn't actually catch root when using base path,
+// so we bind its listener in two routes
+const catchAll = async (req, res) => {
+  // Cognito or GTFO!
+  if (req.auth.type === 'none') return res.error(401, 'Not Authorized')
+
+  return {
+    message: 'Hello world!',
+    req: reqInfo(req),
+  }
+}
+api.any('/', catchAll)
+api.any('/*', catchAll)
 
 module.exports = exports = api
