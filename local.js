@@ -6,6 +6,7 @@
 
 const { api } = require('.')
 const http = require('http')
+const { URL } = require('url')
 
 const serverWrapper = http.createServer(function (request, response) {
   const url = new URL(request.url, `http://${request.headers.host}/`)
