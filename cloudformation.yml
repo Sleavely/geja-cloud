@@ -6,6 +6,18 @@ Parameters:
     Type: String
   ENVIRONMENT:
     Type: String
+  STRIPE_PUBLISHABLE_KEY:
+    Type: String
+  STRIPE_SECRET_KEY:
+    Type: String
+  CONTENTFUL_SPACE_ID:
+    Type: String
+  CONTENTFUL_DELIVERY_API_ACCESS_TOKEN:
+    Type: String
+  MAILGUN_APIKEY:
+    Type: String
+  MAILGUN_DOMAIN:
+    Type: String
 
 Globals:
   Function:
@@ -47,11 +59,12 @@ Resources:
       Handler: 'lambda.handler'
       Environment:
         Variables:
-          STRIPE_PUBLISHABLE_KEY: !Sub aaa111
-          STRIPE_SECRET_KEY: !Sub bbb222
-          CONTENTFUL_SPACE_ID: !Sub ccc333
-          CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ddd444
-          MAILGUN_APIKEY: !Sub eee555
+          STRIPE_PUBLISHABLE_KEY: !Sub ${STRIPE_PUBLISHABLE_KEY}
+          STRIPE_SECRET_KEY: !Sub ${STRIPE_SECRET_KEY}
+          CONTENTFUL_SPACE_ID: !Sub ${CONTENTFUL_SPACE_ID}
+          CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ${CONTENTFUL_DELIVERY_API_ACCESS_TOKEN}
+          MAILGUN_APIKEY: !Sub ${MAILGUN_APIKEY}
+          MAILGUN_DOMAIN: !Sub ${MAILGUN_DOMAIN}
 
       Events:
         HttpReqBase:
