@@ -35,6 +35,7 @@
     "lambda-api": "^0.10.1",
     "mailgun-js": "^0.22.0",
     "resentful": "^1.0.0",
+    "restricted": "^1.0.0-rc2",
     "stripe": "^6.25.1"
   }
 }
