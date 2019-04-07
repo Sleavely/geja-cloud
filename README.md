@@ -2,6 +2,10 @@
 
 A minimalistic ecommerce application for the swedish market.
 
+[![CircleCI](https://circleci.com/gh/Sleavely/geja-cloud/tree/master.svg?style=svg&circle-token=3d9ba39451f3fd7173df433bf09d48bd69e2ecb7)](https://circleci.com/gh/Sleavely/geja-cloud/tree/master)
+
+---
+
 ## Installation
 
 1. Copy `.example.env` to `.env`
