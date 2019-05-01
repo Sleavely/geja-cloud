@@ -21,6 +21,10 @@ const api = require('lambda-api')({
 api.options('/*', (req, res) => {
   res.cors().send({})
 })
+api.use((req, res, next) => {
+  res.cors()
+  next()
+})
 
 api.register(require('./routes/stripe'), { prefix: '/stripe' })
 api.register(require('./routes/contentful'), { prefix: '/contentful' })
