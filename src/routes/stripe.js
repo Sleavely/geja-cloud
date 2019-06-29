@@ -25,6 +25,6 @@ module.exports = (api) => {
     })
 
     console.log(charge)
-    res.status(201).send('Great success!')
+    return charge.status
   })
 }
