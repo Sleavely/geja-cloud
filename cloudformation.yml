@@ -1,5 +1,5 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Transform: 'AWS::Serverless-2016-10-31'
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
 
 Parameters:
   PROJECT:
@@ -55,8 +55,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub ${PROJECT}-${ENVIRONMENT}
-      CodeUri: 'dist/src/'
-      Handler: 'lambda.handler'
+      CodeUri: dist/src/
+      Handler: lambda.handler
       Environment:
         Variables:
           STRIPE_PUBLISHABLE_KEY: !Sub ${STRIPEPUBLISHABLEKEY}
@@ -80,11 +80,19 @@ Resources:
             Path: /{proxy+}
             Method: ANY
       Policies:
-        - Version: "2012-10-17"
+        - Version: 2012-10-17
           Statement:
             -
-              Effect: "Allow"
+              Effect: Allow
               Action:
-                - "dynamodb:*"
+                - dynamodb:GetItem
+                - dynamodb:Query
+                - dynamodb:Scan
               Resource:
-                - !Sub arn:aws:dynamodb:${AWS::Region}:*:table/${PROJECT}-orders-${ENVIRONMENT}
+                - !Sub arn:aws:dynamodb:${AWS::Region}:*:table/${PROJECT}-*-${ENVIRONMENT}
+
+  ApiHandlerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ApiHandlerLambda}
+      RetentionInDays: 365
