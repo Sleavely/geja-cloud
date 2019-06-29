@@ -25,7 +25,7 @@ api.use((req, res, next) => {
   res.cors()
   next()
 })
-api.use((err,req,res,next) => {
+api.use((err, req, res, next) => {
   res.cors()
   next()
 })
