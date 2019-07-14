@@ -23,16 +23,18 @@ module.exports = (api) => {
     const reduced = apiData.items.map(item => resentful.reduce([item]))
     return reduced
   })
-  api.get('/products/:slug', async (req) => {
+  api.get('/products/:slug', async (req, res) => {
     const apiData = await contentful.getEntries({
       content_type: 'product',
       'fields.slug': req.params.slug,
     })
+    if (!apiData) return res.sendStatus(404)
     const reduced = resentful.reduce(apiData.items)
     return reduced
   })
   api.get('/entry/:entryId', async (req, res) => {
     const apiData = await contentful.getEntry(req.params.entryId)
+    if (!apiData) return res.sendStatus(404)
     const reduced = resentful.reduce([apiData])
     return reduced
   })
