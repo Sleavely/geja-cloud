@@ -28,12 +28,15 @@ module.exports = (api) => {
       content_type: 'product',
       'fields.slug': req.params.slug,
     })
-    if (!apiData) return res.sendStatus(404)
-    const reduced = resentful.reduce(apiData.items)
-    return reduced
+    if (!apiData.items.length) return res.sendStatus(404)
+    const reduced = apiData.items.map(item => resentful.reduce([item]))
+    return reduced[0]
   })
   api.get('/entry/:entryId', async (req, res) => {
-    const apiData = await contentful.getEntry(req.params.entryId)
+    const apiData = await contentful.getEntry(req.params.entryId).catch((err) => {
+      if (err.sys && err.sys.id === 'NotFound') return undefined
+      return err
+    })
     if (!apiData) return res.sendStatus(404)
     const reduced = resentful.reduce([apiData])
     return reduced
