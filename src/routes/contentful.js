@@ -18,6 +18,19 @@ module.exports = (api) => {
     return reduced
   })
 
+  api.get('/categories/:path/products', async (req, res) => {
+    const { items: [category] } = await contentful.getEntries({
+      content_type: 'category',
+      'fields.path': req.params.path,
+    })
+    const products = await contentful.getEntries({
+      content_type: 'product',
+      links_to_entry: category.sys.id,
+    })
+    const reduced = products.items.map(item => resentful.reduce([item]))
+    return reduced
+  })
+
   api.get('/products', async (req, res) => {
     const apiData = await contentful.getEntries({ content_type: 'product' })
     const reduced = apiData.items.map(item => resentful.reduce([item]))
