@@ -28,6 +28,11 @@ module.exports = (api) => {
       links_to_entry: category.sys.id,
     })
     const reduced = products.items.map(item => resentful.reduce([item]))
+      // Scrap categories from the product response
+      .map(product => {
+        delete product['categories']
+        return product
+      })
     return reduced
   })
 
