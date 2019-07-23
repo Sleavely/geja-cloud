@@ -39,8 +39,13 @@ Resources:
       StageName: !Ref ENVIRONMENT
       Cors:
         AllowMethods: "'POST, GET, OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: swagger.yaml
 
   BasePath:
     Type: AWS::ApiGateway::BasePathMapping
