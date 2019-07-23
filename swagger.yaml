@@ -51,7 +51,6 @@ definitions:
         description: A unique ID for the product.
       slug:
         type: string
-        format: date-time
         description: E.g. `super-nice-bracelet-123`
       productName:
         type: string
