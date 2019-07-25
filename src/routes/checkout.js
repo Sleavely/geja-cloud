@@ -16,8 +16,8 @@ module.exports = (api) => {
     } = req.body
 
     // Lets not trust the client to supply the actual price.
-    const products = await Promise.all(cartItems.map((item) => products.getBySlug(item.sku).then(product => product && ({ inCart: item.quantity, ...product }))))
-    const sumTotal = products.reduce((total, product) => {
+    const mergedProducts = await Promise.all(cartItems.map((item) => products.getBySlug(item.sku).then(product => product && ({ inCart: item.quantity, ...product }))))
+    const sumTotal = mergedProducts.reduce((total, product) => {
       return total + (product.inCart * product.price * 100)
     }, 0)
 

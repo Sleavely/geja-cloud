@@ -15,7 +15,7 @@ const resentful = new Resentful()
 exports.getBySlug = async (slug) => {
   const apiData = await contentful.getEntries({
     content_type: 'product',
-    'fields.slug': req.params.slug,
+    'fields.slug': slug,
   })
   if (!apiData.items.length) return false
   const reduced = apiData.items.map(item => resentful.reduce([item]))
