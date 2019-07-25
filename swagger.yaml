@@ -152,7 +152,7 @@ paths:
             $ref: '#/definitions/ProductSet'
 
   /contentful/categories/{path}/products:
-    <<: *&ProductsByCategory
+    <<: *ProductsByCategory
 
   /checkout/cart:
     post:
@@ -189,8 +189,6 @@ paths:
             <<: *CORSHeaders
           schema:
             type: object
-
-
 
   /products/{slug}: &ProductBySlug
     get:
