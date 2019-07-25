@@ -119,7 +119,7 @@ x-definitions:
 
 paths:
 
-  /categories:
+  /categories: &Categories
     get:
       <<: *AWSLambda
       summary: Retrieves all available product categories
@@ -131,7 +131,10 @@ paths:
           schema:
             $ref: '#/definitions/CategorySet'
 
-  /categories/{path}/products:
+  /contentful/categories:
+    <<: *Categories
+
+  /categories/{path}/products: &ProductsByCategory
     get:
       <<: *AWSLambda
       summary: Returns all products in a category.
@@ -147,6 +150,9 @@ paths:
             <<: *CORSHeaders
           schema:
             $ref: '#/definitions/ProductSet'
+
+  /contentful/categories/{path}/products:
+    <<: *&ProductsByCategory
 
   /checkout/cart:
     post:
@@ -186,7 +192,7 @@ paths:
 
 
 
-  /products/{slug}:
+  /products/{slug}: &ProductBySlug
     get:
       <<: *AWSLambda
       summary: Retrieve a single product.
@@ -202,6 +208,9 @@ paths:
             <<: *CORSHeaders
           schema:
             $ref: '#/definitions/Product'
+
+  /contentful/products/{slug}:
+    <<: *ProductBySlug
 
 x-amazon-apigateway-request-validator: validate-body-and-params
 x-amazon-apigateway-request-validators:
