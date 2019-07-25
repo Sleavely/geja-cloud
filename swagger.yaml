@@ -148,6 +148,43 @@ paths:
           schema:
             $ref: '#/definitions/ProductSet'
 
+  /checkout/cart:
+    post:
+      <<: *AWSLambda
+      summary: Register a PaymentIntent for a cart.
+      consumes:
+        - application/json
+      parameters:
+        - name: cart
+          in: body
+          required: true
+          schema:
+              type: object
+              required:
+                - cartId
+                - items
+              properties:
+                cartId:
+                  type: string
+                items:
+                  type: array
+                  items:
+                    name: cartItem
+                    type: object
+                    properties:
+                      sku:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            type: object
+
+
 
   /products/{slug}:
     get:

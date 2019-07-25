@@ -30,6 +30,8 @@ api.use((err, req, res, next) => {
   next()
 })
 
+api.register(require('./routes/checkout'), { prefix: '/checkout' })
+
 api.register(require('./routes/stripe'), { prefix: '/stripe' })
 api.register(require('./routes/contentful'), { prefix: '/contentful' })
 api.register(require('./routes/mailgun'), { prefix: '/mailgun' })
