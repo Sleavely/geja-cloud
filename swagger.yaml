@@ -113,113 +113,11 @@ definitions:
         type: string
       object:
         type: string
-      request:
-        type: string
       pending_webhooks:
         type: integer
-      api_version:
-        type: string
-        format: date
       data:
         type: object
-        properties:
-          object:
-            type: object
-            properties:
-              id:
-                type: string
-              object:
-                type: string
-              amount:
-                type: integer
-              amount_capturable:
-                type: integer
-              amount_received:
-                type: integer
-              application:
-                type: string
-              application_fee_amount:
-                type: string
-              canceled_at:
-                type: string
-              cancellation_reason:
-                type: string
-              capture_method:
-                type: string
-              charges:
-                type: object
-                properties:
-                  object:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      type: object
-                  has_more:
-                    type: boolean
-                  total_count:
-                    type: integer
-                  url:
-                    type: string
-              client_secret:
-                type: string
-              confirmation_method:
-                type: string
-              created:
-                type: integer
-              currency:
-                type: string
-              customer:
-                type: string
-              description:
-                type: string
-              invoice:
-                type: string
-              last_payment_error:
-                type: string
-              livemode:
-                type: boolean
-              metadata:
-                type: object
-                properties:
-                  cartId:
-                    type: string
-              next_action:
-                type: string
-              on_behalf_of:
-                type: string
-              payment_method:
-                type: string
-              payment_method_options:
-                type: object
-                properties:
-                  card:
-                    type: object
-                    properties:
-                      request_three_d_secure:
-                        type: string
-              payment_method_types:
-                type: array
-                items:
-                  type: string
-              receipt_email:
-                type: string
-              review:
-                type: string
-              setup_future_usage:
-                type: string
-              shipping:
-                type: string
-              source:
-                type: string
-              statement_descriptor:
-                type: string
-              status:
-                type: string
-              transfer_data:
-                type: string
-              transfer_group:
-                type: string
+        description: The entity in Stripe that the webhook event refers to.
 
 
 x-definitions:
