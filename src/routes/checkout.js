@@ -50,8 +50,7 @@ module.exports = (api) => {
     try {
       const signatureHeader = req.headers['stripe-signature']
       event = stripe.webhooks.constructEvent(req.body, signatureHeader, STRIPE_WEBHOOK_SECRET)
-    }
-    catch (err) {
+    } catch (err) {
       req.log.error(err)
       return res.status(400).send(`Error: ${err.message}`)
     }
