@@ -30,7 +30,7 @@ module.exports = (api) => {
   api.get('/products/:slug', async (req, res) => {
     const product = products.getBySlug(req.params.slug)
 
-    if(!product) return res.sendStatus(404)
+    if (!product) return res.sendStatus(404)
     return product
   })
   api.get('/entry/:entryId', async (req, res) => {

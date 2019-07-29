@@ -1,5 +1,4 @@
 const {
-  STRIPE_PUBLISHABLE_KEY,
   STRIPE_SECRET_KEY,
 } = process.env
 
@@ -8,7 +7,6 @@ const stripe = require('stripe')(STRIPE_SECRET_KEY)
 const products = require('../models/products')
 
 module.exports = (api) => {
-
   api.post('/cart', async (req, res) => {
     const {
       cartId,
