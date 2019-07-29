@@ -53,7 +53,7 @@ module.exports = (api) => {
     }
     catch (err) {
       req.log.error(err)
-      return res.status(400).send(`Error: ${err.message}`);
+      return res.status(400).send(`Error: ${err.message}`)
     }
 
     switch (event.type) {
