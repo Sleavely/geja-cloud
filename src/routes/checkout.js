@@ -12,7 +12,7 @@ module.exports = (api) => {
   api.post('/cart', async (req, res) => {
     const {
       cartId,
-      cartItems,
+      items: cartItems,
     } = req.body
 
     // Lets not trust the client to supply the actual price.
@@ -23,8 +23,7 @@ module.exports = (api) => {
 
     // Either update an existing intent or create a new one.
     if (req.body.paymentIntent) {
-      return stripe.paymentIntents.update(req.body.paymentIntent, { amount: sumTotal }
-        )
+      return stripe.paymentIntents.update(req.body.paymentIntent, { amount: sumTotal })
     } else {
       return stripe.paymentIntents.create({
         amount: sumTotal,
