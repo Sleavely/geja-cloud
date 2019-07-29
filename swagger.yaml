@@ -1,0 +1,270 @@
+---
+swagger: "2.0"
+info:
+  title:
+    Fn::Sub: GEJA-${ENVIRONMENT}
+  description: E-commerce API
+  contact:
+    name: Joakim Hedlund
+  version: 1.0.1
+servers:
+  - url: https://api.geja.se/
+    description: Production server (uses live data)
+  - url: https://aws.triplehead.net/geja/
+    description: Sandbox server (uses test data)
+schemes:
+  - https
+
+definitions:
+  CategorySet:
+    type: array
+    description: List of Category objects.
+    items:
+      $ref: '#/definitions/Category'
+
+  Category:
+    type: object
+    properties:
+      title:
+        type: string
+        description: Category name. Displayed in menus
+      path:
+        type: string
+        description: The URL slug
+      categoryDescription:
+        type: string
+        description: Long description, used on the category page.
+      icon:
+        $ref: '#/definitions/Image'
+
+  ProductSet:
+    type: array
+    description: List of Products matching the query.
+    items:
+      $ref: '#/definitions/Product'
+
+  Product:
+    type: object
+    properties:
+      sku:
+        type: string
+        description: A unique ID for the product.
+      slug:
+        type: string
+        description: E.g. `super-nice-bracelet-123`
+      productName:
+        type: string
+        description: E.g. `Super nice bracelet!`
+      productDescription:
+        type: string
+        description: Longform description. Supports Markdown.
+      price:
+        type: integer
+        description: SEK price including VAT
+      image:
+        type: array
+        items:
+          $ref: '#/definitions/Image'
+
+  Image:
+    type: object
+    properties:
+      title:
+        type: string
+        description: File description in Contentful
+      file:
+        type: object
+        properties:
+          contentType:
+            type: string
+            description: MIME type of the file.
+          details:
+            type: object
+            properties:
+              size:
+                type: integer
+                description: File size in bytes
+              image:
+                type: object
+                properties:
+                  width:
+                    type: integer
+                    description: Pixel width
+                  height:
+                    type: integer
+                    description: Pixel height
+          fileName:
+            type: string
+            description: The original file name
+          url:
+            type: string
+            description: Protocol-relative URL to the Contentful-hosted file.
+
+  StripeWebhook:
+    type: object
+    properties:
+      created:
+        type: integer
+      livemode:
+        type: boolean
+      id:
+        type: string
+      type:
+        type: string
+      object:
+        type: string
+      pending_webhooks:
+        type: integer
+      data:
+        type: object
+        description: The entity in Stripe that the webhook event refers to.
+
+
+x-definitions:
+  AWSLambda: &AWSLambda
+    x-amazon-apigateway-integration:
+      uri:
+        Fn::Sub: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/${ApiHandlerLambda.Arn}/invocations
+      passthroughBehavior: when_no_match
+      httpMethod: POST
+      type: aws_proxy
+  CORSHeaders: &CORSHeaders
+    Access-Control-Allow-Headers:
+      type: string
+    Access-Control-Allow-Methods:
+      type: string
+    Access-Control-Allow-Origin:
+      type: string
+
+
+paths:
+
+  /categories: &Categories
+    get:
+      <<: *AWSLambda
+      summary: Retrieves all available product categories
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            $ref: '#/definitions/CategorySet'
+
+  /contentful/categories:
+    <<: *Categories
+
+  /categories/{path}/products: &ProductsByCategory
+    get:
+      <<: *AWSLambda
+      summary: Returns all products in a category.
+      parameters:
+        - name: path
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            $ref: '#/definitions/ProductSet'
+
+  /contentful/categories/{path}/products:
+    <<: *ProductsByCategory
+
+  /checkout/cart:
+    post:
+      <<: *AWSLambda
+      summary: Register a PaymentIntent for a cart.
+      consumes:
+        - application/json
+      parameters:
+        - name: cart
+          in: body
+          required: true
+          schema:
+              type: object
+              required:
+                - cartId
+                - items
+              properties:
+                cartId:
+                  type: string
+                items:
+                  type: array
+                  items:
+                    name: cartItem
+                    type: object
+                    properties:
+                      sku:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            type: object
+            properties:
+              paymentIntent:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  client_secret:
+                    type: string
+
+  /checkout/webhook:
+    post:
+      <<: *AWSLambda
+      summary: Endpoint for Stripe webhooks
+      consumes:
+        - application/json
+      parameters:
+        - name: event
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StripeWebhook'
+      responses:
+        200:
+          description: maximum swag
+        400:
+          description: no bueno
+
+  /products/{slug}: &ProductBySlug
+    get:
+      <<: *AWSLambda
+      summary: Retrieve a single product.
+      parameters:
+        - name: slug
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            $ref: '#/definitions/Product'
+
+  /contentful/products/{slug}:
+    <<: *ProductBySlug
+
+x-amazon-apigateway-request-validator: validate-body-and-params
+x-amazon-apigateway-request-validators:
+  validate-body-and-params:
+    validateRequestParameters: true
+    validateRequestBody: true
+x-amazon-apigateway-gateway-responses:
+  DEFAULT_4XX:  &gatewayCorsResponse
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type'"
+      gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,GET,POST'"
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+  DEFAULT_5XX: *gatewayCorsResponse

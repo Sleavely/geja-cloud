@@ -27,8 +27,10 @@ api.use((req, res, next) => {
 })
 api.use((err, req, res, next) => {
   res.cors()
-  next()
+  next(err)
 })
+
+api.register(require('./routes/checkout'), { prefix: '/checkout' })
 
 api.register(require('./routes/stripe'), { prefix: '/stripe' })
 api.register(require('./routes/contentful'), { prefix: '/contentful' })

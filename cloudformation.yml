@@ -10,6 +10,8 @@ Parameters:
     Type: String
   STRIPESECRETKEY:
     Type: String
+  STRIPEWEBHOOKSECRET:
+    Type: String
   CONTENTFULSPACEID:
     Type: String
   CONTENTFULDELIVERYAPIACCESSTOKEN:
@@ -39,8 +41,13 @@ Resources:
       StageName: !Ref ENVIRONMENT
       Cors:
         AllowMethods: "'POST, GET, OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: swagger.yaml
 
   BasePath:
     Type: AWS::ApiGateway::BasePathMapping
@@ -61,6 +68,7 @@ Resources:
         Variables:
           STRIPE_PUBLISHABLE_KEY: !Sub ${STRIPEPUBLISHABLEKEY}
           STRIPE_SECRET_KEY: !Sub ${STRIPESECRETKEY}
+          STRIPE_WEBHOOK_SECRET: !Sub ${STRIPEWEBHOOKSECRET}
           CONTENTFUL_SPACE_ID: !Sub ${CONTENTFULSPACEID}
           CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ${CONTENTFULDELIVERYAPIACCESSTOKEN}
           MAILGUN_APIKEY: !Sub ${MAILGUNAPIKEY}

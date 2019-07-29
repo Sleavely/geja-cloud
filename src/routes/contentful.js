@@ -11,6 +11,8 @@ const contentful = Contentful.createClient({
 const Resentful = require('resentful')
 const resentful = new Resentful()
 
+const products = require('../models/products')
+
 module.exports = (api) => {
   api.get('/categories', async (req, res) => {
     const apiData = await contentful.getEntries({ content_type: 'category' })
@@ -19,36 +21,17 @@ module.exports = (api) => {
   })
 
   api.get('/categories/:path/products', async (req, res) => {
-    const { items: [category] } = await contentful.getEntries({
-      content_type: 'category',
-      'fields.path': req.params.path,
-    })
-    const products = await contentful.getEntries({
-      content_type: 'product',
-      links_to_entry: category.sys.id,
-    })
-    const reduced = products.items.map(item => resentful.reduce([item]))
-      // Scrap categories from the product response
-      .map(product => {
-        delete product['categories']
-        return product
-      })
-    return reduced
+    return products.getByCategoryPath(req.params.path)
   })
 
   api.get('/products', async (req, res) => {
-    const apiData = await contentful.getEntries({ content_type: 'product' })
-    const reduced = apiData.items.map(item => resentful.reduce([item]))
-    return reduced
+    return products.getAll()
   })
   api.get('/products/:slug', async (req, res) => {
-    const apiData = await contentful.getEntries({
-      content_type: 'product',
-      'fields.slug': req.params.slug,
-    })
-    if (!apiData.items.length) return res.sendStatus(404)
-    const reduced = apiData.items.map(item => resentful.reduce([item]))
-    return reduced[0]
+    const product = products.getBySlug(req.params.slug)
+
+    if (!product) return res.sendStatus(404)
+    return product
   })
   api.get('/entry/:entryId', async (req, res) => {
     const apiData = await contentful.getEntry(req.params.entryId).catch((err) => {
