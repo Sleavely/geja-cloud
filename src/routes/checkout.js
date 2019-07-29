@@ -49,7 +49,7 @@ module.exports = (api) => {
     // Verify the signature originated at Stripe before proceeding.
     try {
       const signatureHeader = req.headers['stripe-signature']
-      event = stripe.webhooks.constructEvent(req.body, signatureHeader, STRIPE_WEBHOOK_SECRET)
+      event = stripe.webhooks.constructEvent(req.rawBody, signatureHeader, STRIPE_WEBHOOK_SECRET)
     } catch (err) {
       req.log.error(err)
       return res.status(400).send(`Error: ${err.message}`)
