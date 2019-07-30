@@ -22,16 +22,13 @@ module.exports = (api) => {
 
     // Either update an existing intent or create a new one.
     let paymentIntent
-    if (req.body.paymentIntent) {
-      paymentIntent = await stripe.paymentIntents.update(req.body.paymentIntent, { amount: sumTotal })
+    if (cartId) {
+      paymentIntent = await stripe.paymentIntents.update(cartId, { amount: sumTotal })
     } else {
       paymentIntent = await stripe.paymentIntents.create({
         amount: sumTotal,
         currency: 'SEK',
         statement_descriptor: 'GEJA',
-        metadata: {
-          cartId,
-        },
       })
     }
     return {

@@ -187,7 +187,6 @@ paths:
           schema:
               type: object
               required:
-                - cartId
                 - items
               properties:
                 cartId:
