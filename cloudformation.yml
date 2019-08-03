@@ -31,6 +31,7 @@ Globals:
         API_BASE_PATH: !Sub ${PROJECT}
         ENVIRONMENT: !Sub ${ENVIRONMENT}
         LOG_LEVEL: warn
+        PROJECT: !Sub ${PROJECT}
 
 Resources:
   # Api Gateway
@@ -73,6 +74,7 @@ Resources:
           CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ${CONTENTFULDELIVERYAPIACCESSTOKEN}
           MAILGUN_APIKEY: !Sub ${MAILGUNAPIKEY}
           MAILGUN_DOMAIN: !Sub ${MAILGUNDOMAIN}
+          ORDERS_TOPIC_ARN: !Ref OrdersSnsTopic
 
       Events:
         HttpReqBase:
@@ -90,8 +92,7 @@ Resources:
       Policies:
         - Version: 2012-10-17
           Statement:
-            -
-              Effect: Allow
+            - Effect: Allow
               Action:
                 - dynamodb:GetItem
                 - dynamodb:Query
@@ -104,3 +105,28 @@ Resources:
     Properties:
       LogGroupName: !Sub /aws/lambda/${ApiHandlerLambda}
       RetentionInDays: 365
+
+  CartsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub ${PROJECT}-carts-${ENVIRONMENT}
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  OrdersSnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: Payment received (Order created) webhook
+      KmsMasterKeyId: alias/aws/sns

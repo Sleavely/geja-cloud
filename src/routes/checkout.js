@@ -1,10 +1,16 @@
 const {
+  AWS_REGION = 'eu-west-1',
+  ORDERS_TOPIC_ARN = '',
   STRIPE_SECRET_KEY,
   STRIPE_WEBHOOK_SECRET,
 } = process.env
 
+const AWS_SNS = require('aws-sdk/clients/sns')
+const sns = new AWS_SNS({ apiVersion: '2010-03-31', region: AWS_REGION })
 const stripe = require('stripe')(STRIPE_SECRET_KEY)
 
+const carts = require('../models/carts')
+const orders = require('../models/orders')
 const products = require('../models/products')
 
 module.exports = (api) => {
@@ -31,6 +37,10 @@ module.exports = (api) => {
         statement_descriptor: 'GEJA',
       })
     }
+    await carts.put({
+      id: paymentIntent.id,
+      items: mergedProducts,
+    })
     return {
       paymentIntent: {
         id: paymentIntent.id,
@@ -56,6 +66,17 @@ module.exports = (api) => {
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object
         // TODO: emit SNS
+        req.log.debug('Payment succeeded', { paymentIntent })
+
+        // Prepare a standardized order object to emit to service(s) that act on it.
+        const normalizedOrder = await orders.normalizeFromPaymentIntent(paymentIntent)
+        await sns
+          .publish({
+            Message: JSON.stringify(normalizedOrder),
+            TopicArn: ORDERS_TOPIC_ARN,
+          })
+          .promise()
+        req.log.debug('Published order to SNS', { normalizedOrder })
         break
       default:
         // Unexpected event type
