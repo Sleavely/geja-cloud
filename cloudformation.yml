@@ -96,6 +96,7 @@ Resources:
               Action:
                 - dynamodb:GetItem
                 - dynamodb:Query
+                - dynamodb:PutItem
                 - dynamodb:Scan
               Resource:
                 - !Sub arn:aws:dynamodb:${AWS::Region}:*:table/${PROJECT}-*-${ENVIRONMENT}
