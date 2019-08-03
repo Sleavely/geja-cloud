@@ -32,6 +32,7 @@
   "dependencies": {
     "contentful": "^7.4.0",
     "dotenv": "^6.2.0",
+    "dynamo-plus": "^1.1.1",
     "lambda-api": "^0.10.1",
     "mailgun-js": "^0.22.0",
     "resentful": "^1.0.0",
