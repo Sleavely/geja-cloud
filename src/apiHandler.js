@@ -1,5 +1,5 @@
 
-const { api } = require('./utils/api')
+const api = require('./utils/api')
 
 // Declare your Lambda handler
 exports.handler = async (event, context) => {
