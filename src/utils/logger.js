@@ -12,7 +12,7 @@ const makeLogger = (event, context) => {
     id: context.awsRequestId,
     _start: Date.now(),
     coldStart: api._requestCount === 0,
-    requestCount: ++api._requestCount
+    requestCount: ++api._requestCount,
   }
   const fakeRes = {}
 
@@ -37,6 +37,5 @@ const makeLogger = (event, context) => {
 
   return logger
 }
-
 
 module.exports = exports = makeLogger
