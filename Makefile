@@ -27,7 +27,6 @@ deploy:
 	@rm -rf dist
 	@mkdir -p dist
 
-	@echo "Inlining email templates"
 	@node bin/inlineEmailCss.js
 
 	@echo "Building deployment package"
@@ -44,6 +43,4 @@ deploy:
 	@echo "Done!"
 
 inline:
-	@echo "Inlining CSS"
 	@node bin/inlineEmailCss.js
-	@echo "Done!"
