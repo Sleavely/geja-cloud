@@ -16,7 +16,7 @@ deploy = aws cloudformation deploy --template-file dist/cloudformation.dist.yml 
     --stack-name $(PROJECT)-$(ENVIRONMENT) \
     --region $(AWS_DEFAULT_REGION) \
     --parameter-overrides \
-      $(shell cf-env.js) \
+      $(shell bin/cf-env.js) \
     --tags $(TAGS) \
     --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --s3-bucket $(ARTIFACTS_BUCKET) \
@@ -41,6 +41,3 @@ deploy:
 	@echo "Cleaning up"
 	@rm -rf dist
 	@echo "Done!"
-
-inline:
-	@node bin/inlineEmailCss.js
