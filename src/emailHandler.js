@@ -1,7 +1,10 @@
 
+const makeLogger = require('./utils/logger')
 const { renderReceipt } = require('./email')
 
 exports.handler = async (event, context) => {
+  const logger = makeLogger(event, context)
+  logger.debug('Emailhandler was called!', { event, context })
   // TODO: import makeLogger from its-batches
 
   const templateVariables = {
