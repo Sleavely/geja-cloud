@@ -1,4 +1,5 @@
 require('dotenv').config()
 
 exports.api = require('./api')
-exports.handler = require('./lambda').handler
+exports.apiHandler = require('./apiHandler').handler
+exports.emailHandler = require('./emailHandler').handler
