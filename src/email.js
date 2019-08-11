@@ -1,7 +1,7 @@
 
 const Handlebars = require('handlebars')
 const path = require('path')
-const { readFileAsync } = require('utils/fs')
+const { readFileAsync } = require('./utils/fs')
 
 exports.renderReceipt = async (templateVariables = {}) => {
   // TODO: this could be optimized by using global variables for in-memory caching
