@@ -25,6 +25,8 @@ Mappings:
     api:
       hostname: api.geja.se
 
+Conditions:
+  IsProd: !Equals [ !Ref ENVIRONMENT, prod ]
 
 Globals:
   Function:
@@ -84,7 +86,10 @@ Resources:
   BasePath:
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
-      BasePath: !Sub ${PROJECT}
+      BasePath: !If
+        - IsProd
+        - AWS::NoValue
+        - !Sub ${PROJECT}
       DomainName: !FindInMap [!Ref ENVIRONMENT, api, hostname]
       RestApiId: !Ref ApiGateway
       Stage: !Ref ApiGateway.Stage
