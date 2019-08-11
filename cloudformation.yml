@@ -16,14 +16,19 @@ Parameters:
     Type: String
   CONTENTFULDELIVERYAPIACCESSTOKEN:
     Type: String
-  MAILGUNAPIKEY:
-    Type: String
-  MAILGUNDOMAIN:
-    Type: String
+
+Mappings:
+  dev:
+    api:
+      hostname: aws.triplehead.net
+  prod:
+    api:
+      hostname: api.geja.se
+
 
 Globals:
   Function:
-    Runtime: nodejs8.10
+    Runtime: nodejs10.x
     Timeout: 30
     Handler: index.handler
     Environment:
@@ -34,7 +39,33 @@ Globals:
         PROJECT: !Sub ${PROJECT}
 
 Resources:
-  # Api Gateway
+
+  CartsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub ${PROJECT}-carts-${ENVIRONMENT}
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  OrderCreationSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Sub GEJA Orders (${ENVIRONMENT})
+      KmsMasterKeyId: alias/aws/sns
+
+  # REST API
   ApiGateway:
     Type: AWS::Serverless::Api
     Properties:
@@ -54,17 +85,16 @@ Resources:
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
       BasePath: !Sub ${PROJECT}
-      DomainName: aws.triplehead.net
+      DomainName: !FindInMap [!Ref ENVIRONMENT, api, hostname]
       RestApiId: !Ref ApiGateway
       Stage: !Ref ApiGateway.Stage
 
-  # Lambda Functions
   ApiHandlerLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${PROJECT}-${ENVIRONMENT}
+      FunctionName: !Sub ${PROJECT}-api-${ENVIRONMENT}
       CodeUri: dist/src/
-      Handler: lambda.handler
+      Handler: apiHandler.handler
       Environment:
         Variables:
           STRIPE_PUBLISHABLE_KEY: !Sub ${STRIPEPUBLISHABLEKEY}
@@ -72,9 +102,7 @@ Resources:
           STRIPE_WEBHOOK_SECRET: !Sub ${STRIPEWEBHOOKSECRET}
           CONTENTFUL_SPACE_ID: !Sub ${CONTENTFULSPACEID}
           CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ${CONTENTFULDELIVERYAPIACCESSTOKEN}
-          MAILGUN_APIKEY: !Sub ${MAILGUNAPIKEY}
-          MAILGUN_DOMAIN: !Sub ${MAILGUNDOMAIN}
-          ORDERS_TOPIC_ARN: !Ref OrdersSnsTopic
+          ORDERS_TOPIC_ARN: !Ref OrderCreationSNSTopic
 
       Events:
         HttpReqBase:
@@ -103,7 +131,7 @@ Resources:
             - Effect: Allow
               Action:
                 - sns:Publish
-              Resource: !Ref OrdersSnsTopic
+              Resource: !Ref OrderCreationSNSTopic
 
   ApiHandlerLogGroup:
     Type: AWS::Logs::LogGroup
@@ -111,27 +139,76 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${ApiHandlerLambda}
       RetentionInDays: 365
 
-  CartsTable:
-    Type: AWS::DynamoDB::Table
-    DeletionPolicy: Retain
-    Properties:
-      TableName: !Sub ${PROJECT}-carts-${ENVIRONMENT}
-      BillingMode: PAY_PER_REQUEST
-      PointInTimeRecoverySpecification:
-        PointInTimeRecoveryEnabled: true
-      SSESpecification:
-        SSEEnabled: true
-      StreamSpecification:
-        StreamViewType: NEW_AND_OLD_IMAGES
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
 
-  OrdersSnsTopic:
-    Type: AWS::SNS::Topic
+  # Email confirmations
+  EmailsQueue:
+    Type: AWS::SQS::Queue
     Properties:
-      DisplayName: Payment received (Order created) webhook
-      KmsMasterKeyId: alias/aws/sns
+      QueueName: !Sub ${PROJECT}-emails-${ENVIRONMENT}
+      MessageRetentionPeriod: 1209600
+
+  EmailsQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    DependsOn:
+    - EmailsQueue
+    Properties:
+      Queues:
+      - !Ref EmailsQueue
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Action:
+          - sqs:SendMessage
+          Resource: !GetAtt EmailsQueue.Arn
+          Condition:
+            ArnEquals:
+              aws:SourceArn: !Ref OrderCreationSNSTopic
+
+  EmailsOrderCreationSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !GetAtt EmailsQueue.Arn
+      Protocol: sqs
+      RawMessageDelivery: false
+      Region: !Sub ${AWS::Region}
+      TopicArn: !Ref OrderCreationSNSTopic
+
+  EmailsHandlerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${PROJECT}-emails-${ENVIRONMENT}
+      CodeUri: dist/src/
+      Handler: emailHandler.handler
+      Events:
+        EmailSqsEvents:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt EmailsQueue.Arn
+            BatchSize: 10
+            Enabled: true
+      Policies:
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - sqs:ReceiveMessage
+                - sqs:DeleteMessage
+                - sqs:ChangeMessageVisibility
+                - sqs:GetQueueAttributes
+              Resource: !GetAtt EmailsQueue.Arn
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+                - dynamodb:Scan
+              Resource:
+                - !Sub arn:aws:dynamodb:${AWS::Region}:*:table/${PROJECT}-*-${ENVIRONMENT}
+
+  EmailsHandlerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${EmailsHandlerLambda}
+      RetentionInDays: 365
