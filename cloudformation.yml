@@ -108,20 +108,6 @@ Resources:
           CONTENTFUL_SPACE_ID: !Sub ${CONTENTFULSPACEID}
           CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ${CONTENTFULDELIVERYAPIACCESSTOKEN}
           ORDERS_TOPIC_ARN: !Ref OrderCreationSNSTopic
-
-      Events:
-        HttpReqBase:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApiGateway
-            Path: /
-            Method: ANY
-        HttpReqProxy:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApiGateway
-            Path: /{proxy+}
-            Method: ANY
       Policies:
         - Version: 2012-10-17
           Statement:
