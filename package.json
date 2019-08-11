@@ -21,7 +21,6 @@
   "homepage": "https://bitbucket.org/Sleavely/geja-cloud",
   "devDependencies": {
     "aws-sdk": "^2.488.0",
-    "dotenv": "^6.2.0",
     "eslint": "^5.13.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.16.0",
@@ -33,6 +32,7 @@
   },
   "dependencies": {
     "contentful": "^7.4.0",
+    "dotenv": "^6.2.0",
     "dynamo-plus": "^1.1.1",
     "handlebars": "^4.1.2",
     "lambda-api": "^0.10.1",
