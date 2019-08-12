@@ -31,12 +31,6 @@ api.use((err, req, res, next) => {
   next(err)
 })
 
-api.register(require('../routes/checkout'), { prefix: '/checkout' })
-
-api.register(require('../routes/stripe'), { prefix: '/stripe' })
-api.register(require('../routes/contentful'), { prefix: '/contentful' })
-api.register(require('../routes/contentful'))
-
 api.get('/routes', async () => {
   return api.routes()
 })
