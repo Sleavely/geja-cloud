@@ -6,10 +6,7 @@
   "scripts": {
     "test": "jest --verbose test/ && eslint ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git://git@bitbucket.org/Sleavely/geja-cloud.git"
-  },
+  "repository": "Sleavely/geja-cloud",
   "keywords": [
     "ecommerce",
     "stripe",
@@ -18,7 +15,7 @@
   ],
   "author": "Joakim Hedlund <contact@joakimhedlund.com>",
   "license": "to kill",
-  "homepage": "https://bitbucket.org/Sleavely/geja-cloud",
+  "homepage": "https://github.com/Sleavely/geja-cloud",
   "devDependencies": {
     "aws-sdk": "^2.488.0",
     "eslint": "^5.13.0",
