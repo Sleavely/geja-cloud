@@ -11,7 +11,9 @@ exports.normalizeFromPaymentIntent = async (paymentIntent) => {
     id: paymentIntent.id,
     createdAt: paidAt,
     customer: {
-      firstname: paymentIntent.metadata.customer_firstname,
+      // temporarily use full name when firstname not available:
+      // https://github.com/Sleavely/geja-cloud/issues/4
+      firstname: paymentIntent.metadata.customer_firstname || paymentIntent.shipping.name,
       lastname: paymentIntent.metadata.customer_lastname,
       email: paymentIntent.receipt_email,
       phone: paymentIntent.shipping.phone,
