@@ -141,7 +141,6 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${ApiHandlerLambda}
       RetentionInDays: 365
 
-
   # Email confirmations
   EmailsQueue:
     Type: AWS::SQS::Queue
