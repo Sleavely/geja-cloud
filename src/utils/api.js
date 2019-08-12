@@ -35,18 +35,4 @@ api.get('/routes', async () => {
   return api.routes()
 })
 
-// Catch-all doesn't actually catch root when using base path,
-// so we bind its listener in two routes
-const catchAll = async (req, res) => {
-  // Cognito or GTFO!
-  if (req.auth.type === 'none') return res.sendStatus(404)
-
-  return {
-    message: 'Hello world!',
-    // req: reqInfo(req),
-  }
-}
-api.any('/', catchAll)
-api.any('/*', catchAll)
-
 module.exports = exports = api
