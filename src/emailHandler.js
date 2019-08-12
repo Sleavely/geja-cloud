@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
       purchase_date: (new Date(order.createdAt)).toLocaleDateString('sv-SE'),
       items: order.items,
       total_price: (order.amount / 100),
-      support_url: 'https://geja.se/kontakt'
+      support_url: 'https://geja.se/kontakt',
     }
     const htmlBody = await renderReceipt(templateVariables)
 
