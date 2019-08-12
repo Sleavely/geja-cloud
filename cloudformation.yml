@@ -33,6 +33,7 @@ Globals:
     Runtime: nodejs10.x
     Timeout: 30
     Handler: index.handler
+    Tracing: Active
     Environment:
       Variables:
         API_BASE_PATH: !Sub ${PROJECT}
