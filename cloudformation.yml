@@ -213,6 +213,14 @@ Resources:
                 - dynamodb:Scan
               Resource:
                 - !Sub arn:aws:dynamodb:${AWS::Region}:*:table/${PROJECT}-*-${ENVIRONMENT}
+            - Effect: Allow
+              Action:
+                - "ses:SendEmail"
+                - "ses:SendRawEmail"
+              Resource: "*"
+              Condition:
+                StringLike:
+                  "ses:FromAddress": "*@geja.se"
 
   EmailsHandlerLogGroup:
     Type: AWS::Logs::LogGroup
