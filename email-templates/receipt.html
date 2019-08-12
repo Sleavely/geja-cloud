@@ -490,8 +490,8 @@
                                 </tr>
                                 {{#each items}}
                                 <tr>
-                                  <td width="80%" class="purchase_item"><span class="f-fallback">{{description}}</span></td>
-                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{amount}}</span></td>
+                                  <td width="80%" class="purchase_item"><span class="f-fallback">{{productName}}</span></td>
+                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{inCart}}</span></td>
                                 </tr>
                                 {{/each}}
                                 <tr>
@@ -499,7 +499,7 @@
                                     <p class="f-fallback purchase_total purchase_total--label">Totalt</p>
                                   </td>
                                   <td width="20%" class="purchase_footer" valign="middle">
-                                    <p class="f-fallback purchase_total">{{total}}</p>
+                                    <p class="f-fallback purchase_total">{{total_price}}</p>
                                   </td>
                                 </tr>
                               </table>
