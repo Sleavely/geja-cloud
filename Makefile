@@ -1,7 +1,7 @@
 ENVIRONMENT        ?= $(shell grep -E "^ENVIRONMENT=.+$$" .env | cut -d '=' -f2)
 PROJECT             = $(shell grep -E "^PROJECT=.+$$" .env | cut -d '=' -f2)
 AWS_DEFAULT_REGION ?= eu-west-1
-BRANCH_NAME = $(shell git branch | grep \* | cut -d ' ' -f2)
+BRANCH_NAME = "$(shell git branch | grep \* | cut -d ' ' -f2- | sed -E -e 's/\(|\)//g')"
 COMMIT_HASH = $(shell git log -1 --format=%h)
 TAGS = Environment=$(ENVIRONMENT) Project=$(PROJECT) GitBranch=$(BRANCH_NAME) GitCommit=$(COMMIT_HASH)
 ARTIFACTS_BUCKET = irish-luck
