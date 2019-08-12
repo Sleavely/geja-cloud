@@ -127,20 +127,13 @@ Resources:
               Action:
                 - sns:Publish
               Resource: !Ref OrderCreationSNSTopic
-      # These paths are irrelevant but SAM will add permissions for apigateway to invoke the lambda for
-      Events:
-        HttpReqBase:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApiGateway
-            Path: /
-            Method: ANY
-        HttpReqProxy:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApiGateway
-            Path: /{proxy+}
-            Method: ANY
+
+  ApiHandlerLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ApiHandlerLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
 
   ApiHandlerLogGroup:
     Type: AWS::Logs::LogGroup
