@@ -36,7 +36,10 @@ Globals:
     Tracing: Active
     Environment:
       Variables:
-        API_BASE_PATH: !Sub ${PROJECT}
+        API_BASE_PATH: !If
+          - IsProd
+          - ""
+          - !Sub ${PROJECT}
         CONTENTFUL_SPACE_ID: !Sub ${CONTENTFULSPACEID}
         CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ${CONTENTFULDELIVERYAPIACCESSTOKEN}
         ENVIRONMENT: !Sub ${ENVIRONMENT}
