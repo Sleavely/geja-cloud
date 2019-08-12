@@ -30,7 +30,7 @@ exports.main = async () => {
     console.log(`Processing ${filePath}..`)
 
     const fileContents = await fs.readFileAsync(filePath, { encoding: 'utf8' })
-    const inlinedContents = await inlineTemplate(fileContents, {})
+    const inlinedContents = await inlineTemplate(fileContents, { webResources: { images: 2 } })
 
     // Write to src/email/templates
     await fs.writeFileAsync(path.join(targetDirectory, fileName), inlinedContents, { encoding: 'utf8' })
