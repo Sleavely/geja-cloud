@@ -74,6 +74,7 @@ Resources:
     Properties:
       Name: !Sub ${PROJECT}-${ENVIRONMENT}
       StageName: !Ref ENVIRONMENT
+      TracingEnabled: true
       Cors:
         AllowMethods: "'POST, GET, OPTIONS'"
         AllowHeaders: "'Content-Type'"
