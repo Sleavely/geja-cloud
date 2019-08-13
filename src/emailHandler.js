@@ -52,7 +52,7 @@ exports.handler = async (event, context) => {
     }
     const emailResponse = await emailClient.sendEmail(sesParams).promise()
     logger.debug('Got response from SES sendMail()', { emailResponse })
-    logger.info('Send email for order', { orderId: order.id })
+    logger.info('Send email for order', { orderId: order.id, toEmail: order.customer.email })
   })).catch((err) => {
     logger.error('Could not send email.', { error: err })
     return Promise.reject(err)
