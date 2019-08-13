@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
       customer: order.customer,
       purchase_date: (new Date(order.createdAt)).toLocaleDateString('sv-SE'),
       items: order.items,
-      total_price: (order.amount / 100),
+      total_price: Number(order.amount / 100).toLocaleString('sv-SE'),
       support_url: 'https://geja.se/kontakt',
     }
     const htmlBody = await renderReceipt(templateVariables)
@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
     const sesParams = {
       Destination: {
         ToAddresses: [
-          order.customer.email,
+          `"${order.customer.name} <${order.customer.email}>"`,
         ],
       },
       Message: {
@@ -45,9 +45,9 @@ exports.handler = async (event, context) => {
           Data: 'Orderbekräftelse',
         },
       },
-      Source: 'info@geja.se',
+      Source: '"GEJA Smycken <info@geja.se>"',
       ReplyToAddresses: [
-        'info@geja.se',
+        '"GEJA Smycken <info@geja.se>"',
       ],
     }
     const emailResponse = await emailClient.sendEmail(sesParams).promise()
