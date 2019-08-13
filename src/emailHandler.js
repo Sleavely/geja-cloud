@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
     const sesParams = {
       Destination: {
         ToAddresses: [
-          `"${order.customer.name} <${order.customer.email}>"`,
+          `${order.customer.name} <${order.customer.email}>`,
         ],
       },
       Message: {
@@ -45,13 +45,14 @@ exports.handler = async (event, context) => {
           Data: 'Orderbekräftelse',
         },
       },
-      Source: '"GEJA Smycken <info@geja.se>"',
+      Source: 'GEJA Smycken <info@geja.se>',
       ReplyToAddresses: [
-        '"GEJA Smycken <info@geja.se>"',
+        'GEJA Smycken <info@geja.se>',
       ],
     }
     const emailResponse = await emailClient.sendEmail(sesParams).promise()
     logger.debug('Got response from SES sendMail()', { emailResponse })
+    logger.info('Send email for order', { orderId: order.id })
   })).catch((err) => {
     logger.error('Could not send email.', { error: err })
     return Promise.reject(err)
