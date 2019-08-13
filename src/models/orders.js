@@ -8,7 +8,7 @@ exports.normalizeFromPaymentIntent = async (paymentIntent) => {
   const paidAt = Math.floor(paymentIntent.charges.data[0].created * 1000)
 
   const normalized = {
-    id: paymentIntent.id,
+    id: paymentIntent.id.substring(3),
     createdAt: paidAt,
     customer: {
       // temporarily splits full name when firstname not available:
