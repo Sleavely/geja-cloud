@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
     const sesParams = {
       Destination: {
         ToAddresses: [
-          `${order.customer.name} <${order.customer.email}>`,
+          `${order.customer.firstname} ${order.customer.lastname} <${order.customer.email}>`,
         ],
       },
       Message: {
