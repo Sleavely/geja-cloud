@@ -44,6 +44,7 @@ Globals:
         CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: !Sub ${CONTENTFULDELIVERYAPIACCESSTOKEN}
         ENVIRONMENT: !Sub ${ENVIRONMENT}
         LOG_LEVEL: warn
+        NODE_ICU_DATA: node_modules/full-icu
         PROJECT: !Sub ${PROJECT}
 
 Resources:
