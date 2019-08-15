@@ -6,6 +6,8 @@ const emailClient = new SES({ apiVersion: '2010-12-01', region: AWS_REGION })
 const makeLogger = require('./utils/logger')
 const { renderReceipt } = require('./email')
 
+const locale = require('./utils/locale')
+
 exports.handler = async (event, context) => {
   const logger = makeLogger(event, context)
   logger.debug('Emailhandler was called!', { event, context })
@@ -19,9 +21,9 @@ exports.handler = async (event, context) => {
     const templateVariables = {
       receipt_id: order.id,
       customer: order.customer,
-      purchase_date: (new Date(order.createdAt)).toLocaleDateString('sv-SE'),
+      purchase_date: locale.dateString(order.createdAt),
       items: order.items,
-      total_price: Number(order.amount / 100).toLocaleString('sv-SE'),
+      total_price: locale.amount(order.amount / 100),
       support_url: 'https://geja.se/kontakt',
     }
     const htmlBody = await renderReceipt(templateVariables)
@@ -50,6 +52,8 @@ exports.handler = async (event, context) => {
         'GEJA Smycken <info@geja.se>',
       ],
     }
+    logger.debug('Sending receipt', { email: templateVariables })
+
     const emailResponse = await emailClient.sendEmail(sesParams).promise()
     logger.debug('Got response from SES sendMail()', { emailResponse })
     logger.info('Send email for order', { orderId: order.id, toEmail: order.customer.email })
