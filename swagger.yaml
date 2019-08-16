@@ -255,6 +255,27 @@ paths:
   /contentful/products/{slug}:
     <<: *ProductBySlug
 
+  /contact:
+    post:
+      <<: *AWSLambda
+      summary: Submit a contact form.
+      consumes:
+        - application/json
+      parameters:
+        - name: envelope
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - email
+              - message
+            properties:
+              email:
+                type: string
+              message:
+                type: string
+
 x-amazon-apigateway-request-validator: validate-body-and-params
 x-amazon-apigateway-request-validators:
   validate-body-and-params:

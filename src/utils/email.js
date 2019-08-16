@@ -12,8 +12,10 @@ exports.encodeAddress = (name, email) => {
   return `=?UTF-8?B?${base64Name}?= <${email}>`
 }
 
-exports.renderContactMessage = async () => {
-
+exports.renderContactMessage = async (templateVariables = {}) => {
+  const template = await readFileAsync(path.join(__dirname, 'emails', 'contactmessage.html'), { encoding: 'utf8' })
+  const renderContactMessage = handlebars.compile(template)
+  return renderContactMessage(templateVariables)
 }
 
 exports.renderReceipt = async (templateVariables = {}) => {
@@ -24,7 +26,7 @@ exports.renderReceipt = async (templateVariables = {}) => {
   return renderReceipt(templateVariables)
 }
 
-exports.sendMail = async ({ recipient, subject, html }) => {
+exports.sendMail = async ({ recipient, replyTo = undefined, subject, html }) => {
   const sesParams = {
     Destination: {
       ToAddresses: [
@@ -47,6 +49,12 @@ exports.sendMail = async ({ recipient, subject, html }) => {
     ReplyToAddresses: [
       'GEJA Smycken <info@geja.se>',
     ],
+  }
+
+  if (replyTo) {
+    sesParams.ReplyToAddresses = [
+      replyTo,
+    ]
   }
 
   return emailClient.sendEmail(sesParams).promise()

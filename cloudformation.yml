@@ -73,6 +73,12 @@ Resources:
       DisplayName: !Sub GEJA Orders (${ENVIRONMENT})
       KmsMasterKeyId: alias/aws/sns
 
+  ContactRequestsSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Sub GEJA Contact Requests (${ENVIRONMENT})
+      KmsMasterKeyId: alias/aws/sns
+
   # REST API
   ApiGateway:
     Type: AWS::Serverless::Api
@@ -112,6 +118,7 @@ Resources:
           STRIPE_SECRET_KEY: !Sub ${STRIPESECRETKEY}
           STRIPE_WEBHOOK_SECRET: !Sub ${STRIPEWEBHOOKSECRET}
           ORDERS_TOPIC_ARN: !Ref OrderCreationSNSTopic
+          CONTACTREQUESTS_TOPIC_ARN: !Ref ContactRequestsSNSTopic
       Policies:
         - Version: 2012-10-17
           Statement:
@@ -127,6 +134,10 @@ Resources:
               Action:
                 - sns:Publish
               Resource: !Ref OrderCreationSNSTopic
+            - Effect: Allow
+              Action:
+                - sns:Publish
+              Resource: !Ref ContactRequestsSNSTopic
 
   ApiLambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -167,7 +178,7 @@ Resources:
             ArnEquals:
               aws:SourceArn: !Ref OrderCreationSNSTopic
 
-  OrderConfirmationEmailsOrderCreationSubscription:
+  OrderConfirmationEmailsSubscription:
     Type: AWS::SNS::Subscription
     Properties:
       Endpoint: !GetAtt OrderConfirmationEmailsQueue.Arn
@@ -220,4 +231,77 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/${OrderConfirmationEmailsLambda}
+      RetentionInDays: 365
+
+  # Contact Emails
+  ContactEmailsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${PROJECT}-contactemails-${ENVIRONMENT}
+      MessageRetentionPeriod: 1209600
+
+  ContactEmailsQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    DependsOn:
+    - ContactEmailsQueue
+    Properties:
+      Queues:
+      - !Ref ContactEmailsQueue
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Action:
+          - sqs:SendMessage
+          Resource: !GetAtt ContactEmailsQueue.Arn
+          Condition:
+            ArnEquals:
+              aws:SourceArn: !Ref ContactRequestsSNSTopic
+
+  ContactEmailsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !GetAtt ContactEmailsQueue.Arn
+      Protocol: sqs
+      RawMessageDelivery: false
+      Region: !Sub ${AWS::Region}
+      TopicArn: !Ref ContactRequestsSNSTopic
+
+  ContactEmailsLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${PROJECT}-contactemails-${ENVIRONMENT}
+      CodeUri: dist/src/
+      Handler: contactFormSender.handler
+      Events:
+        EmailSqsEvents:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt ContactEmailsQueue.Arn
+            BatchSize: 10
+            Enabled: true
+      Policies:
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - sqs:ReceiveMessage
+                - sqs:DeleteMessage
+                - sqs:ChangeMessageVisibility
+                - sqs:GetQueueAttributes
+              Resource: !GetAtt ContactEmailsQueue.Arn
+            - Effect: Allow
+              Action:
+                - "ses:SendEmail"
+                - "ses:SendRawEmail"
+              Resource: "*"
+              Condition:
+                StringLike:
+                  "ses:FromAddress": "*@geja.se"
+
+  ContactEmailsHandlerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ContactEmailsLambda}
       RetentionInDays: 365

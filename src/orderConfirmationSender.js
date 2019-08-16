@@ -5,7 +5,6 @@ const locale = require('./utils/locale')
 
 exports.handler = async (event, context) => {
   const logger = makeLogger(event, context)
-  logger.debug('Emailhandler was called!', { event, context })
 
   // Some fuckery to unwrap the order from SNS message from Lambda-managed SQS batch
   return Promise.all(event.Records.map(async (sqsMessage) => {
