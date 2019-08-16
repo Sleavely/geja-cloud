@@ -4,7 +4,7 @@ const {
 const SES = require('aws-sdk/clients/ses')
 const emailClient = new SES({ apiVersion: '2010-12-01', region: AWS_REGION })
 const makeLogger = require('./utils/logger')
-const { renderReceipt } = require('./utils/email')
+const { encodeAddress, renderReceipt } = require('./utils/email')
 
 const locale = require('./utils/locale')
 
@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
     const sesParams = {
       Destination: {
         ToAddresses: [
-          `${order.customer.firstname} ${order.customer.lastname} <${order.customer.email}>`,
+          encodeAddress(`${order.customer.firstname} ${order.customer.lastname}`, order.customer.email),
         ],
       },
       Message: {
