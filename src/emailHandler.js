@@ -1,11 +1,6 @@
-const {
-  AWS_REGION = 'eu-west-1',
-} = process.env
-const SES = require('aws-sdk/clients/ses')
-const emailClient = new SES({ apiVersion: '2010-12-01', region: AWS_REGION })
-const makeLogger = require('./utils/logger')
-const { encodeAddress, renderReceipt } = require('./utils/email')
 
+const { encodeAddress, renderReceipt, sendMail } = require('./utils/email')
+const makeLogger = require('./utils/logger')
 const locale = require('./utils/locale')
 
 exports.handler = async (event, context) => {
@@ -29,36 +24,20 @@ exports.handler = async (event, context) => {
     const htmlBody = await renderReceipt(templateVariables)
 
     // Send it
-    const sesParams = {
-      Destination: {
-        ToAddresses: [
-          encodeAddress(`${order.customer.firstname} ${order.customer.lastname}`, order.customer.email),
-        ],
-      },
-      Message: {
-        Body: {
-          Html: {
-            Charset: 'UTF-8',
-            Data: htmlBody,
-          },
-        },
-        Subject: {
-          Charset: 'UTF-8',
-          Data: 'Orderbekräftelse',
-        },
-      },
-      Source: 'GEJA Smycken <info@geja.se>',
-      ReplyToAddresses: [
-        'GEJA Smycken <info@geja.se>',
-      ],
-    }
     logger.debug('Sending receipt', { email: templateVariables })
 
-    const emailResponse = await emailClient.sendEmail(sesParams).promise()
+    const emailResponse = await sendMail({
+      recipient: encodeAddress(
+        `${order.customer.firstname} ${order.customer.lastname}`,
+        order.customer.email
+      ),
+      subject: 'Orderbekräftelse',
+      html: htmlBody,
+    })
     logger.debug('Got response from SES sendMail()', { emailResponse })
     logger.info('Send email for order', { orderId: order.id, toEmail: order.customer.email })
   })).catch((err) => {
     logger.error('Could not send email.', { error: err })
-    return Promise.reject(err)
+    throw err
   })
 }

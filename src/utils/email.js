@@ -1,5 +1,9 @@
-
-const Handlebars = require('handlebars')
+const {
+  AWS_REGION = 'eu-west-1',
+} = process.env
+const SES = require('aws-sdk/clients/ses')
+const emailClient = new SES({ apiVersion: '2010-12-01', region: AWS_REGION })
+const handlebars = require('handlebars')
 const path = require('path')
 const { readFileAsync } = require('./fs')
 
@@ -15,6 +19,35 @@ exports.renderContactMessage = async () => {
 exports.renderReceipt = async (templateVariables = {}) => {
   // TODO: this could be optimized by using global variables for in-memory caching
   const template = await readFileAsync(path.join(__dirname, 'emails', 'receipt.html'), { encoding: 'utf8' })
-  const renderReceipt = Handlebars.compile(template)
+  // TODO: this could be optimized by, you know, using the handlebars implementation built-in to SES
+  const renderReceipt = handlebars.compile(template)
   return renderReceipt(templateVariables)
+}
+
+exports.sendMail = async ({ recipient, subject, html }) => {
+  const sesParams = {
+    Destination: {
+      ToAddresses: [
+        recipient,
+      ],
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: 'UTF-8',
+          Data: html,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: subject,
+      },
+    },
+    Source: 'GEJA Smycken <info@geja.se>',
+    ReplyToAddresses: [
+      'GEJA Smycken <info@geja.se>',
+    ],
+  }
+
+  return emailClient.sendEmail(sesParams).promise()
 }
