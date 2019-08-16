@@ -100,7 +100,7 @@ Resources:
       RestApiId: !Ref ApiGateway
       Stage: !Ref ApiGateway.Stage
 
-  ApiHandlerLambda:
+  ApiLambda:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub ${PROJECT}-api-${ENVIRONMENT}
@@ -128,33 +128,33 @@ Resources:
                 - sns:Publish
               Resource: !Ref OrderCreationSNSTopic
 
-  ApiHandlerLambdaInvokePermission:
+  ApiLambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !Ref ApiHandlerLambda
+      FunctionName: !Ref ApiLambda
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
 
   ApiHandlerLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /aws/lambda/${ApiHandlerLambda}
+      LogGroupName: !Sub /aws/lambda/${ApiLambda}
       RetentionInDays: 365
 
-  # Email confirmations
-  EmailsQueue:
+  # Order Confirmation Emails
+  OrderConfirmationEmailsQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${PROJECT}-emails-${ENVIRONMENT}
+      QueueName: !Sub ${PROJECT}-orderconfirmationemails-${ENVIRONMENT}
       MessageRetentionPeriod: 1209600
 
-  EmailsQueuePolicy:
+  OrderConfirmationEmailsQueuePolicy:
     Type: AWS::SQS::QueuePolicy
     DependsOn:
-    - EmailsQueue
+    - OrderConfirmationEmailsQueue
     Properties:
       Queues:
-      - !Ref EmailsQueue
+      - !Ref OrderConfirmationEmailsQueue
       PolicyDocument:
         Statement:
           Effect: Allow
@@ -162,31 +162,31 @@ Resources:
             Service: sns.amazonaws.com
           Action:
           - sqs:SendMessage
-          Resource: !GetAtt EmailsQueue.Arn
+          Resource: !GetAtt OrderConfirmationEmailsQueue.Arn
           Condition:
             ArnEquals:
               aws:SourceArn: !Ref OrderCreationSNSTopic
 
-  EmailsOrderCreationSubscription:
+  OrderConfirmationEmailsOrderCreationSubscription:
     Type: AWS::SNS::Subscription
     Properties:
-      Endpoint: !GetAtt EmailsQueue.Arn
+      Endpoint: !GetAtt OrderConfirmationEmailsQueue.Arn
       Protocol: sqs
       RawMessageDelivery: false
       Region: !Sub ${AWS::Region}
       TopicArn: !Ref OrderCreationSNSTopic
 
-  EmailsHandlerLambda:
+  OrderConfirmationEmailsLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${PROJECT}-emails-${ENVIRONMENT}
+      FunctionName: !Sub ${PROJECT}-orderconfirmationemails-${ENVIRONMENT}
       CodeUri: dist/src/
-      Handler: emailHandler.handler
+      Handler: orderConfirmationSender.handler
       Events:
         EmailSqsEvents:
           Type: SQS
           Properties:
-            Queue: !GetAtt EmailsQueue.Arn
+            Queue: !GetAtt OrderConfirmationEmailsQueue.Arn
             BatchSize: 10
             Enabled: true
       Policies:
@@ -198,7 +198,7 @@ Resources:
                 - sqs:DeleteMessage
                 - sqs:ChangeMessageVisibility
                 - sqs:GetQueueAttributes
-              Resource: !GetAtt EmailsQueue.Arn
+              Resource: !GetAtt OrderConfirmationEmailsQueue.Arn
             - Effect: Allow
               Action:
                 - dynamodb:GetItem
@@ -216,8 +216,8 @@ Resources:
                 StringLike:
                   "ses:FromAddress": "*@geja.se"
 
-  EmailsHandlerLogGroup:
+  OrderConfirmationEmailsHandlerLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /aws/lambda/${EmailsHandlerLambda}
+      LogGroupName: !Sub /aws/lambda/${OrderConfirmationEmailsLambda}
       RetentionInDays: 365
