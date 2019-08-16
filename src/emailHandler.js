@@ -4,7 +4,7 @@ const {
 const SES = require('aws-sdk/clients/ses')
 const emailClient = new SES({ apiVersion: '2010-12-01', region: AWS_REGION })
 const makeLogger = require('./utils/logger')
-const { renderReceipt } = require('./email')
+const { renderReceipt } = require('./utils/email')
 
 const locale = require('./utils/locale')
 

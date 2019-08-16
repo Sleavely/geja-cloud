@@ -1,7 +1,16 @@
 
 const Handlebars = require('handlebars')
 const path = require('path')
-const { readFileAsync } = require('./utils/fs')
+const { readFileAsync } = require('./fs')
+
+exports.encodeAddress = (name, email) => {
+  const base64Name = Buffer.from(name).toString('base64')
+  return `=?UTF-8?B?${base64Name}?= <${email}>`
+}
+
+exports.renderContactMessage = async () => {
+
+}
 
 exports.renderReceipt = async (templateVariables = {}) => {
   // TODO: this could be optimized by using global variables for in-memory caching
