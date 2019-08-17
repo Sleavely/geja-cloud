@@ -235,6 +235,24 @@ paths:
         400:
           description: no bueno
 
+  /products:
+    get:
+      <<: *AWSLambda
+      summary: Retrieve products across categories, sorted by last updated.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 100
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            $ref: '#/definitions/ProductSet'
+
   /products/{slug}: &ProductBySlug
     get:
       <<: *AWSLambda

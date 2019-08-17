@@ -22,8 +22,8 @@ exports.getBySlug = async (slug) => {
   return reduced[0]
 }
 
-exports.getAll = async () => {
-  const apiData = await contentful.getEntries({ content_type: 'product' })
+exports.getAll = async ({ limit = 100 }) => {
+  const apiData = await contentful.getEntries({ content_type: 'product', limit, order: '-sys.updatedAt' })
   const reduced = apiData.items.map(item => resentful.reduce([item]))
   return reduced
 }

@@ -25,7 +25,8 @@ module.exports = (api) => {
   })
 
   api.get('/products', async (req, res) => {
-    return products.getAll()
+    const limit = req.query.limit || 100
+    return products.getAll({ limit })
   })
   api.get('/products/:slug', async (req, res) => {
     const product = products.getBySlug(req.params.slug)
