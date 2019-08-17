@@ -13,14 +13,14 @@ exports.encodeAddress = (name, email) => {
 }
 
 exports.renderContactMessage = async (templateVariables = {}) => {
-  const template = await readFileAsync(path.join(__dirname, 'emails', 'contactmessage.html'), { encoding: 'utf8' })
+  const template = await readFileAsync(path.join(__dirname, '..', 'emails', 'contactmessage.html'), { encoding: 'utf8' })
   const renderContactMessage = handlebars.compile(template)
   return renderContactMessage(templateVariables)
 }
 
 exports.renderReceipt = async (templateVariables = {}) => {
   // TODO: this could be optimized by using global variables for in-memory caching
-  const template = await readFileAsync(path.join(__dirname, 'emails', 'receipt.html'), { encoding: 'utf8' })
+  const template = await readFileAsync(path.join(__dirname, '..', 'emails', 'receipt.html'), { encoding: 'utf8' })
   // TODO: this could be optimized by, you know, using the handlebars implementation built-in to SES
   const renderReceipt = handlebars.compile(template)
   return renderReceipt(templateVariables)
