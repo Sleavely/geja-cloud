@@ -13,7 +13,7 @@ module.exports = (api) => {
       message,
     } = req.body
 
-    const contactRequest = { email, message }
+    const contactRequest = { senderEmail: email, message }
 
     req.log.info('Incoming contact request')
     req.log.debug('Complete contact request', { contactRequest })
