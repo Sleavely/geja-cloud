@@ -25,7 +25,9 @@ exports.handler = async (event, context) => {
     logger.debug('Sending contact form email', { email: templateVariables })
 
     const emailResponse = await sendMail({
-      recipient: ENVIRONMENT === 'dev' ? senderEmail : 'GEJA Smycken <info@geja.se>',
+      recipient: ENVIRONMENT === 'dev'
+        ? 'Joakim Hedlund <contact@joakimhedlund.com>'
+        : 'GEJA Smycken <info@geja.se>',
       subject: `Meddelande från ${senderEmail}`,
       html: htmlBody,
       replyTo: senderEmail,
