@@ -28,6 +28,7 @@ exports.handler = async (event, context) => {
     })
 
     logger.debug('Got response from SES sendMail()', { emailResponse })
+    logger.info('Sent email', { replyToAddress: senderEmail })
   })).catch((err) => {
     logger.error('Could not send email.', { error: err })
     throw err

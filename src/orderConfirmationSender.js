@@ -34,7 +34,7 @@ exports.handler = async (event, context) => {
       html: htmlBody,
     })
     logger.debug('Got response from SES sendMail()', { emailResponse })
-    logger.info('Send email for order', { orderId: order.id, toEmail: order.customer.email })
+    logger.info('Sent email for order', { orderId: order.id, toEmail: order.customer.email })
   })).catch((err) => {
     logger.error('Could not send email.', { error: err })
     throw err
