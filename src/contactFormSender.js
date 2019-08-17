@@ -1,4 +1,8 @@
 
+const {
+  ENVIRONMENT = 'dev',
+} = process.env
+
 const { renderContactMessage, sendMail } = require('./utils/email')
 const makeLogger = require('./utils/logger')
 
@@ -21,7 +25,7 @@ exports.handler = async (event, context) => {
     logger.debug('Sending contact form email', { email: templateVariables })
 
     const emailResponse = await sendMail({
-      recipient: 'GEJA Smycken <info@geja.se>',
+      recipient: ENVIRONMENT === 'dev' ? senderEmail : 'GEJA Smycken <info@geja.se>',
       subject: `Meddelande från ${senderEmail}`,
       html: htmlBody,
       replyTo: senderEmail,
