@@ -6,10 +6,7 @@
   "scripts": {
     "test": "jest --verbose test/ && eslint ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git://git@bitbucket.org/Sleavely/geja-cloud.git"
-  },
+  "repository": "Sleavely/geja-cloud",
   "keywords": [
     "ecommerce",
     "stripe",
@@ -18,25 +15,27 @@
   ],
   "author": "Joakim Hedlund <contact@joakimhedlund.com>",
   "license": "to kill",
-  "homepage": "https://bitbucket.org/Sleavely/geja-cloud",
+  "homepage": "https://github.com/Sleavely/geja-cloud",
   "devDependencies": {
-    "aws-sdk": "^2.400.0",
+    "aws-sdk": "^2.488.0",
     "eslint": "^5.13.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "jest": "^24.1.0"
+    "jest": "^24.8.0",
+    "juice": "^5.2.0"
   },
   "dependencies": {
     "contentful": "^7.4.0",
+    "dayjs": "^1.8.15",
     "dotenv": "^6.2.0",
     "dynamo-plus": "^1.1.1",
+    "handlebars": "^4.1.2",
     "lambda-api": "^0.10.1",
-    "mailgun-js": "^0.22.0",
+    "numeral": "^2.0.6",
     "resentful": "^1.0.0",
-    "restricted": "^1.0.0-rc2",
     "stripe": "^6.25.1"
   }
 }

@@ -1,0 +1,20 @@
+{
+  "Records": [
+    {
+      "messageId": "3cfa428e-6e5b-4358-a2b9-b4c7e02a4d95",
+      "receiptHandle": "AQEBrZA5kTR6lmEEDL9yfqYJrs7ptiCUnkK13iApZRXnioJT3LaLGaG8mTcTcLR4IM5v0dFrfxAmrfiNOViTJmkhHNF/KmJw36DVGV9h4zXxyKhRnVIGi+7JGXhaW2tSeDndvqHGGBEyKIdcFGjJJDp+Ozxmr59Gq5Bs3YwN/da5BJnN5Z5QvUQkiopxpxzhTlFmKuWd88oahAucRr3Xvlp7Sik2lpGIezfVlBlyH1hjL5mtxHOsVEKwZXL7cyUmNAYWl6mPknMfxPKwXtCwU+7s88I1hXtogULj4M77IatWzBoH+oEEkpp/335Gsd3lTSPpMrPhoH+jeRHxZ131XOVkloHdGqwLeg7izcqsuku7NBTa59pPBo/cCDVMkrIlizutoBmPWkkTgKc6QkY8m2/++g==",
+      "body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"0fb12898-6c6c-5696-87ed-7d53e47e9692\",\n  \"TopicArn\" : \"arn:aws:sns:eu-west-1:479330620126:geja-dev-OrderCreationSNSTopic-1PN94H18HO3TQ\",\n  \"Message\" : \"{\\\"id\\\":\\\"pi_0F4knhN2k0rJQRxEhfxl48oH\\\",\\\"createdAt\\\":1565623760000,\\\"customer\\\":{\\\"email\\\":\\\"geja.se@cip.nu\\\",\\\"phone\\\":null},\\\"address\\\":{\\\"street\\\":\\\"Oxelvägen 36 LGH 1302\\\",\\\"zipcode\\\":\\\"13831\\\",\\\"city\\\":\\\"Älta\\\",\\\"country\\\":null},\\\"items\\\":[{\\\"image\\\":[{\\\"title\\\":\\\"Imported image 45:108\\\",\\\"file\\\":{\\\"details\\\":{\\\"size\\\":53479,\\\"image\\\":{\\\"width\\\":600,\\\"height\\\":800}},\\\"fileName\\\":\\\"108.jpg\\\",\\\"contentType\\\":\\\"image/jpeg\\\",\\\"url\\\":\\\"//images.ctfassets.net/vei16ap244v2/image108/4294ea0ad439e92fc67762195402e912/108.jpg\\\"}},{\\\"title\\\":\\\"Imported image 45:107\\\",\\\"file\\\":{\\\"details\\\":{\\\"size\\\":50334,\\\"image\\\":{\\\"width\\\":600,\\\"height\\\":800}},\\\"fileName\\\":\\\"107.jpg\\\",\\\"contentType\\\":\\\"image/jpeg\\\",\\\"url\\\":\\\"//images.ctfassets.net/vei16ap244v2/image107/1fdb1af4affded3cf110f41aa9f80332/107.jpg\\\"}}],\\\"price\\\":290,\\\"categories\\\":[{\\\"icon\\\":{\\\"title\\\":\\\"Necklace menu icon\\\",\\\"file\\\":{\\\"details\\\":{\\\"size\\\":12180,\\\"image\\\":{\\\"width\\\":600,\\\"height\\\":600}},\\\"fileName\\\":\\\"necklace-600x600.png\\\",\\\"contentType\\\":\\\"image/png\\\",\\\"url\\\":\\\"//images.ctfassets.net/vei16ap244v2/1uW84lAuH1jmrKixwZ3mnD/6cd5ea4adf05414f71b24a1080108e41/necklace-600x600.png\\\"}},\\\"path\\\":\\\"halsband\\\",\\\"title\\\":\\\"Halsband\\\",\\\"categoryDescription\\\":\\\"Vi erbjuder ett stort urval otroligt vackra och stilrena pärlhalsband som passar både till vardags och festligare tillfällen.\\\"}],\\\"sku\\\":\\\"spp012-b\\\",\\\"productName\\\":\\\"Liten tår - svart\\\",\\\"slug\\\":\\\"spp012-b\\\",\\\"productDescription\\\":\\\"Ett läckert hängsmycke med en svart pärldroppe.\\\\n\\\\nSmycket är tillverkas av odlade sötvattenspärlor, med design i zirkon och halsband i silver.\\\\n\\\\nPärlan är ca 8-9 mm i diameter.\\\",\\\"inCart\\\":3}],\\\"amount\\\":87000,\\\"currency\\\":\\\"sek\\\"}\",\n  \"Timestamp\" : \"2019-08-12T15:29:22.545Z\",\n  \"SignatureVersion\" : \"1\",\n  \"Signature\" : \"VHJEOMiExOJPK6GvyniKK5gjbEjb6MWNfe0vaf3euvhAP76OKFO/k3N/iWJ9/y9hHtnkM6iZ+VjOf7uqbxUWpgm+Y6n2pW/6t1VVrPyD8L1CG+pzlPP8KuxX9NFqfXCwN8t54TXTT2OPM0U+MecPxac541YnIQ1wHHasd/woEwLtjYn7jOOZvuxJgUdtppdKi/zy9CuwuuCSBpBcfi2LnlXmN6l9MrQyKbfaHroeMeev2k8f5MDkfjmEjM7bOLEwp1Ga7XkTriw45csG09L/uTt7hsaV3e9j32dcKew9IIEobJanUucSe2b2bM0gIxJ3gg9HVNZfVIZo8TxqQKAUsQ==\",\n  \"SigningCertURL\" : \"https://sns.eu-west-1.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem\",\n  \"UnsubscribeURL\" : \"https://sns.eu-west-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-1:479330620126:geja-dev-OrderCreationSNSTopic-1PN94H18HO3TQ:4f48e77f-797b-40ec-a183-8a90590a01f4\"\n}",
+      "attributes": {
+        "ApproximateReceiveCount": "70",
+        "SentTimestamp": "1565623762790",
+        "SenderId": "AIDAISMY7JYY5F7RTT6AO",
+        "ApproximateFirstReceiveTimestamp": "1565623762790"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "730dd09dbe58094a84af9ca2de5dad28",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:eu-west-1:479330620126:geja-emails-dev",
+      "awsRegion": "eu-west-1"
+    }
+  ]
+}

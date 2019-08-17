@@ -124,7 +124,7 @@ x-definitions:
   AWSLambda: &AWSLambda
     x-amazon-apigateway-integration:
       uri:
-        Fn::Sub: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/${ApiHandlerLambda.Arn}/invocations
+        Fn::Sub: arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/${ApiLambda.Arn}/invocations
       passthroughBehavior: when_no_match
       httpMethod: POST
       type: aws_proxy
@@ -254,6 +254,27 @@ paths:
 
   /contentful/products/{slug}:
     <<: *ProductBySlug
+
+  /contact:
+    post:
+      <<: *AWSLambda
+      summary: Submit a contact form.
+      consumes:
+        - application/json
+      parameters:
+        - name: envelope
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - email
+              - message
+            properties:
+              email:
+                type: string
+              message:
+                type: string
 
 x-amazon-apigateway-request-validator: validate-body-and-params
 x-amazon-apigateway-request-validators:

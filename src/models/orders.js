@@ -8,11 +8,13 @@ exports.normalizeFromPaymentIntent = async (paymentIntent) => {
   const paidAt = Math.floor(paymentIntent.charges.data[0].created * 1000)
 
   const normalized = {
-    id: paymentIntent.id,
+    id: paymentIntent.id.substring(3),
     createdAt: paidAt,
     customer: {
-      firstname: paymentIntent.metadata.customer_firstname,
-      lastname: paymentIntent.metadata.customer_lastname,
+      // temporarily splits full name when firstname not available:
+      // https://github.com/Sleavely/geja-cloud/issues/4
+      firstname: paymentIntent.metadata.customer_firstname || paymentIntent.shipping.name.split(' ')[0],
+      lastname: paymentIntent.metadata.customer_lastname || paymentIntent.shipping.name.split(' ').slice(1).join(' '),
       email: paymentIntent.receipt_email,
       phone: paymentIntent.shipping.phone,
     },

@@ -1,14 +1,10 @@
 
 const {
-  AWS_REGION = 'eu-west-1',
   ENVIRONMENT = 'dev',
   PROJECT,
 } = process.env
 
-const dynamo = require('dynamo-plus').DynamoPlus({
-  region: AWS_REGION,
-  convertEmptyValues: true,
-})
+const dynamo = require('../utils/dynamoClient')
 
 const CARTS_TABLE = `${PROJECT}-carts-${ENVIRONMENT}`
 

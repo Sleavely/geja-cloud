@@ -1,7 +1,7 @@
 ENVIRONMENT        ?= $(shell grep -E "^ENVIRONMENT=.+$$" .env | cut -d '=' -f2)
 PROJECT             = $(shell grep -E "^PROJECT=.+$$" .env | cut -d '=' -f2)
 AWS_DEFAULT_REGION ?= eu-west-1
-BRANCH_NAME = $(shell git branch | grep \* | cut -d ' ' -f2)
+BRANCH_NAME = "$(shell git branch | grep \* | cut -d ' ' -f2- | sed -E -e 's/\(|\)//g')"
 COMMIT_HASH = $(shell git log -1 --format=%h)
 TAGS = Environment=$(ENVIRONMENT) Project=$(PROJECT) GitBranch=$(BRANCH_NAME) GitCommit=$(COMMIT_HASH)
 ARTIFACTS_BUCKET = irish-luck
@@ -16,7 +16,7 @@ deploy = aws cloudformation deploy --template-file dist/cloudformation.dist.yml 
     --stack-name $(PROJECT)-$(ENVIRONMENT) \
     --region $(AWS_DEFAULT_REGION) \
     --parameter-overrides \
-      $(shell cf-env.js) \
+      $(shell bin/cf-env.js) \
     --tags $(TAGS) \
     --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --s3-bucket $(ARTIFACTS_BUCKET) \
@@ -26,6 +26,8 @@ deploy:
 	@echo "Resetting dist directory"
 	@rm -rf dist
 	@mkdir -p dist
+
+	@node bin/inlineEmailCss.js
 
 	@echo "Building deployment package"
 	@cp -r src dist/
