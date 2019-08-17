@@ -1,6 +1,6 @@
 const {
   AWS_REGION = 'eu-west-1',
-  CONTACTREQUEST_TOPIC_ARN = '',
+  CONTACTREQUESTS_TOPIC_ARN = '',
 } = process.env
 
 const AWS_SNS = require('aws-sdk/clients/sns')
@@ -21,7 +21,7 @@ module.exports = (api) => {
     await sns
       .publish({
         Message: JSON.stringify(contactRequest),
-        TopicArn: CONTACTREQUEST_TOPIC_ARN,
+        TopicArn: CONTACTREQUESTS_TOPIC_ARN,
       })
       .promise()
     req.log.debug('Published request to SNS', { contactRequest })
