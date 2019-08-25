@@ -100,7 +100,7 @@ Resources:
     Properties:
       BasePath: !If
         - IsProd
-        - AWS::NoValue
+        - !Ref AWS::NoValue
         - !Sub ${PROJECT}
       DomainName: !FindInMap [!Ref ENVIRONMENT, api, hostname]
       RestApiId: !Ref ApiGateway
