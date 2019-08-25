@@ -10,7 +10,7 @@ package = aws cloudformation package \
     --template-file cloudformation.yml \
     --output-template-file dist/cloudformation.dist.yml \
     --s3-bucket $(ARTIFACTS_BUCKET) \
-    --s3-prefix $(PROJECT)
+    --s3-prefix $(PROJECT)-$(ENVIRONMENT)
 
 deploy = aws cloudformation deploy --template-file dist/cloudformation.dist.yml \
     --stack-name $(PROJECT)-$(ENVIRONMENT) \
