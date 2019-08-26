@@ -5,15 +5,16 @@ BRANCH_NAME = "$(shell git branch | grep \* | cut -d ' ' -f2- | sed -E -e 's/\(|
 COMMIT_HASH = $(shell git log -1 --format=%h)
 TAGS = Environment=$(ENVIRONMENT) Project=$(PROJECT) GitBranch=$(BRANCH_NAME) GitCommit=$(COMMIT_HASH)
 ARTIFACTS_BUCKET = irish-luck
+STACK_NAME = $(PROJECT)-$(ENVIRONMENT)
 
 package = aws cloudformation package \
     --template-file cloudformation.yml \
     --output-template-file dist/cloudformation.dist.yml \
     --s3-bucket $(ARTIFACTS_BUCKET) \
-    --s3-prefix $(PROJECT)-$(ENVIRONMENT)
+    --s3-prefix $(STACK_NAME)
 
 deploy = aws cloudformation deploy --template-file dist/cloudformation.dist.yml \
-    --stack-name $(PROJECT)-$(ENVIRONMENT) \
+    --stack-name $(STACK_NAME) \
     --region $(AWS_DEFAULT_REGION) \
     --parameter-overrides \
       $(shell bin/cf-env.js) \
