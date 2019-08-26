@@ -19,6 +19,7 @@ exports.handler = async (event, context) => {
     const templateVariables = {
       receipt_id: order.id,
       customer: order.customer,
+      address: order.address,
       purchase_date: locale.dateString(order.createdAt),
       items: order.items,
       total_price: locale.amount(order.amount / 100),
