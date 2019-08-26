@@ -26,6 +26,12 @@ exports.renderReceipt = async (templateVariables = {}) => {
   return renderReceipt(templateVariables)
 }
 
+exports.renderAdminOrderNotification = async (templateVariables = {}) => {
+  const template = await readFileAsync(path.join(__dirname, '..', 'emails', 'admin-order-notification.html'), { encoding: 'utf8' })
+  const renderReceipt = handlebars.compile(template)
+  return renderReceipt(templateVariables)
+}
+
 exports.sendMail = async ({ recipient, replyTo = undefined, subject, html }) => {
   const sesParams = {
     Destination: {
