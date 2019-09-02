@@ -21,10 +21,11 @@ module.exports = (api) => {
     } = req.body
 
     // Lets not trust the client to supply the actual price.
+    const shippingCost = 63 * 100
     const mergedProducts = await Promise.all(cartItems.map((item) => products.getBySlug(item.sku).then(product => product && ({ inCart: item.quantity, ...product }))))
     const sumTotal = mergedProducts.reduce((total, product) => {
       return total + (product.inCart * product.price * 100)
-    }, 0)
+    }, 0) + shippingCost
 
     // Either update an existing intent or create a new one.
     let paymentIntent
