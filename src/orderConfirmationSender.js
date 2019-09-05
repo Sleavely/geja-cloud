@@ -23,6 +23,7 @@ exports.handler = async (event, context) => {
       purchase_date: locale.dateString(order.createdAt),
       items: order.items,
       total_price_formatted: locale.amount(order.amount / 100),
+      total_vat_formatted: locale.amount(order.amount * 0.2 / 100),
       support_url: 'https://geja.se/kontakt',
     }
     const receiptHtml = await renderReceipt(templateVariables)

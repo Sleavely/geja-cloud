@@ -230,15 +230,19 @@
       border-top: 1px solid #EAEAEC;
     }
 
+    .purchase_total--label, .purchase_vat--label {
+      padding: 0 15px 0 0;
+    }
+    .purchase_total, .purchase_vat {
+      text-align: right;
+    }
     .purchase_total {
       margin: 0;
-      text-align: right;
       font-weight: bold;
       color: #333333;
     }
-
-    .purchase_total--label {
-      padding: 0 15px 0 0;
+    .purchase_vat {
+      font-size: 13px;
     }
 
     body {
@@ -452,6 +456,11 @@
                                 <tr>
                                   <td width="100%" class="purchase_footer" valign="middle">
                                     <p class="f-fallback purchase_total purchase_total--label">Totalt {{total_price_formatted}}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td width="100%" valign="middle">
+                                    <p class="f-fallback purchase_vat purchase_vat--label">Varav {{total_vat_formatted}} moms</p>
                                   </td>
                                 </tr>
                               </table>
