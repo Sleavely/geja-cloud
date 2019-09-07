@@ -6,5 +6,5 @@ module.exports = exports = {
   dayjs,
   numeral,
   dateString: (constructor) => dayjs(constructor).format('YYYY-MM-DD'),
-  amount: (number) => numeral(number).format('0,0[.]00'),
+  amount: (number) => numeral(number).format('0,0[.]00 $'),
 }

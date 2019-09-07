@@ -17,7 +17,7 @@ numeral.register('locale', 'sv', {
     return (b === 1 || b === 2) ? ':a' : ':e'
   },
   currency: {
-    symbol: 'SEK',
+    symbol: 'kr',
   },
 })
 
