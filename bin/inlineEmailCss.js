@@ -7,6 +7,7 @@ const { promisify } = require('util')
 
 const inlineTemplate = promisify(juice.juiceResources)
 exports.main = async () => {
+
   console.log('Inlining email templates..')
 
   // find email-template files

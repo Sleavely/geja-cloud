@@ -4,4 +4,7 @@ describe('module', () => {
     require('..')
     return true
   })
+  it('throw doesnt throw', async () => {
+    throw new Error('winning')
+  })
 })
