@@ -45,8 +45,11 @@ jobs:
           command: |
             aws cloudformation describe-stack-events --stack-name $PROJECT-$ENVIRONMENT |
             grep -B 7 -A 4 "\"Timestamp\": \"$(date +%Y-%m-%d)" |
-            grep -A 2 -B 7 -E "\"ResourceStatus\": \".*FAILED\""
+            grep -A 2 -B 7 -E "\"ResourceStatus\": \".*FAILED\"" > /tmp/cloudformation-failures.log
           when: on_fail
+
+      - store_artifacts:
+          path: /tmp/cloudformation-failures.log
 
 workflows:
   version: 2
