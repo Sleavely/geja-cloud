@@ -32,9 +32,6 @@ jobs:
             - dev-dependencies-
       - run: npm ci # need `juice` for deployments
       - run: make deploy
-      - run:
-          name: Finished
-          command: echo "This step is used to force circleCI to print its error buffer from the deployment."
 
 workflows:
   version: 2
