@@ -26,11 +26,16 @@ jobs:
       ENVIRONMENT: dev
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - dev-dependencies-{{ checksum "package.json" }}
+            - dev-dependencies-
+      - run: npm ci # need `juice` for deployments
       - run: make deploy
 
 workflows:
   version: 2
-  build_and_test:
+  test_and_deploy:
     jobs:
       - test
       - deploy_dev:
