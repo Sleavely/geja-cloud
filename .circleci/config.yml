@@ -38,10 +38,10 @@ jobs:
 
       - run: npm i # need `juice` for deployments
 
-      - run: exit 1 && make deploy
+      - run: make deploy
 
       - run:
-          name: print failure events
+          name: Capture recent failure events
           command: |
             aws cloudformation describe-stack-events --stack-name $PROJECT-$ENVIRONMENT |
             grep -B 7 -A 4 "\"Timestamp\": \"$(date +%Y-%m-%d)" |
