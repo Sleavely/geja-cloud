@@ -26,6 +26,7 @@ jobs:
     docker:
       - image: sleavely/node-awscli:10.15
     environment:
+      AWS_DEFAULT_REGION: eu-west-1
       ENVIRONMENT: dev
       PROJECT: geja
     steps:
