@@ -27,6 +27,7 @@ jobs:
       - image: sleavely/node-awscli:10.15
     environment:
       ENVIRONMENT: dev
+      PROJECT: geja
     steps:
       - checkout
       - restore_cache:
