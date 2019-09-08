@@ -1,5 +1,5 @@
-ENVIRONMENT        ?= $(shell grep -E "^ENVIRONMENT=.+$$" .env | cut -d '=' -f2)
-PROJECT             = $(shell grep -E "^PROJECT=.+$$" .env | cut -d '=' -f2)
+ENVIRONMENT        ?= dev
+PROJECT             = $(shell node -p 'require("./package.json").name')
 AWS_DEFAULT_REGION ?= eu-west-1
 BRANCH_NAME = "$(shell git branch | grep \* | cut -d ' ' -f2- | sed -E -e 's/\(|\)//g')"
 COMMIT_HASH = $(shell git log -1 --format=%h)
@@ -22,7 +22,8 @@ deploy = aws cloudformation deploy --template-file dist/cloudformation.dist.yml 
     --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --s3-bucket $(ARTIFACTS_BUCKET) \
     # --no-fail-on-empty-changeset
-
+echoenv:
+	echo $(ENVIRONMENT)
 deploy:
 	@echo "Resetting dist directory"
 	@rm -rf dist
