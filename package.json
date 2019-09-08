@@ -46,6 +46,7 @@
     ]
   },
   "jest-junit": {
-    "outputDirectory": "test-results/jest"
+    "outputDirectory": "test-results/jest",
+    "suiteNameTemplate": "{filename}"
   }
 }
