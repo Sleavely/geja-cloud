@@ -1,5 +1,5 @@
 {
-  "name": "geja-cloud",
+  "name": "geja",
   "version": "0.0.1",
   "description": "A serverless webshop",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "ecommerce",
     "stripe",
     "contentful",
-    "mailgun"
+    "aws"
   ],
   "author": "Joakim Hedlund <contact@joakimhedlund.com>",
   "license": "to kill",
