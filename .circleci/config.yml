@@ -17,7 +17,12 @@ jobs:
             - node_modules
           key: dev-dependencies-{{ checksum "package.json" }}
 
-      - run: npm test
+      # Not using npm test because some behaviors are CI specific (junit for eslint and --ci for jest)
+      - run: npx jest --ci --verbose test/
+      - run: npx eslint . --format junit -o test-results/eslint/junit.xml
+
+      - store_test_results:
+          path: test-results
 
   deploy_dev:
     docker:
