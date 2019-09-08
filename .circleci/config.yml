@@ -32,6 +32,13 @@ jobs:
             - dev-dependencies-
       - run: npm ci # need `juice` for deployments
       - run: make deploy
+      - run:
+          name: print failure events
+          command: |
+            aws cloudformation describe-stack-events --stack-name $PROJECT-$ENVIRONMENT |
+            grep -B 7 -A 4 "\"Timestamp\": \"$(date +%Y-%m-%d)" |
+            grep -A 2 -B 7 -E "\"ResourceStatus\": \".*FAILED\""
+          when: on_fail
 
 workflows:
   version: 2
