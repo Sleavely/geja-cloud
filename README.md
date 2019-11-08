@@ -26,3 +26,7 @@ Unless you are me:
 Now, to actually deploy:
 
 1. `make deploy`
+
+## Architecture
+
+[![](architecture.png)](architecture.png)
