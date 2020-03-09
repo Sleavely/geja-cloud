@@ -139,7 +139,7 @@ x-definitions:
 
 paths:
 
-  /categories: &Categories
+  /categories:
     get:
       <<: *AWSLambda
       summary: Retrieves all available product categories
@@ -151,10 +151,7 @@ paths:
           schema:
             $ref: '#/definitions/CategorySet'
 
-  /contentful/categories:
-    <<: *Categories
-
-  /categories/{path}/products: &ProductsByCategory
+  /categories/{path}/products:
     get:
       <<: *AWSLambda
       summary: Returns all products in a category.
@@ -171,8 +168,40 @@ paths:
           schema:
             $ref: '#/definitions/ProductSet'
 
-  /contentful/categories/{path}/products:
-    <<: *ProductsByCategory
+  /products:
+    get:
+      <<: *AWSLambda
+      summary: Retrieve products across categories, sorted by last updated.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 100
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            $ref: '#/definitions/ProductSet'
+
+  /products/{slug}:
+    get:
+      <<: *AWSLambda
+      summary: Retrieve a single product.
+      parameters:
+        - name: slug
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          headers:
+            <<: *CORSHeaders
+          schema:
+            $ref: '#/definitions/Product'
 
   /checkout/cart:
     post:
@@ -234,47 +263,6 @@ paths:
           description: maximum swag
         400:
           description: no bueno
-
-  /products: &AllProducts
-    get:
-      <<: *AWSLambda
-      summary: Retrieve products across categories, sorted by last updated.
-      parameters:
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 100
-      responses:
-        200:
-          description: Success
-          headers:
-            <<: *CORSHeaders
-          schema:
-            $ref: '#/definitions/ProductSet'
-
-  /contentful/products:
-    <<: *AllProducts
-
-  /products/{slug}: &ProductBySlug
-    get:
-      <<: *AWSLambda
-      summary: Retrieve a single product.
-      parameters:
-        - name: slug
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: Success
-          headers:
-            <<: *CORSHeaders
-          schema:
-            $ref: '#/definitions/Product'
-
-  /contentful/products/{slug}:
-    <<: *ProductBySlug
 
   /contact:
     post:
