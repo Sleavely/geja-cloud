@@ -48,9 +48,9 @@ const serverWrapper = http.createServer(function (request, response) {
     })
     .catch((err) => {
       console.error('Something went horribly, horribly wrong')
+      console.error(err)
       response.writeHead(500, { 'content-length': 0 })
       response.end('')
-      throw err
     })
 })
 
