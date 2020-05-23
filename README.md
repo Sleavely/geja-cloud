@@ -6,6 +6,10 @@ A minimalistic ecommerce application for the swedish market. The frontend reside
 
 ---
 
+## Background
+
+My uncle sells jewelry and had been using Prestashop for years. My limited understanding of Prestashop, a PHP application, made it hard to customize the platform and optimize it for speed. Meanwhile, I was looking to strengthen my knowledge of the AWS ecosystem and experiment with ways of working that my day job did not allow for. I ended up building this system that costs next to nothing - around $1 USD/month - to host and scales well. 
+
 ## Installation
 
 1. Copy `.example.env` to `.env`
