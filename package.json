@@ -33,7 +33,7 @@
     "dayjs": "^1.8.15",
     "dotenv": "^6.2.0",
     "dynamo-plus": "^1.1.1",
-    "handlebars": "^4.5.3",
+    "handlebars": "^4.7.7",
     "lambda-api": "^0.10.1",
     "numeral": "^2.0.6",
     "resentful": "^1.0.0",
