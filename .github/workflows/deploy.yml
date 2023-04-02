@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  PROJECT: geja
+
+jobs:
+  deploy_dev:
+    name: Deploy dev environment
+    environment: dev
+    runs-on: ubuntu-latest
+
+    # Required to use OIDC
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::479330620126:role/github-oidc-Role-1DNEHO655IPHU
+          aws-region: eu-west-1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - run: npm ci
+
+      - run: make deploy
+        env:
+          ENVIRONMENT: dev
+          LOG_LEVEL: debug
+
+          STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+
+          CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
+          CONTENTFUL_DELIVERY_API_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_DELIVERY_API_ACCESS_TOKEN }}
