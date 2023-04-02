@@ -30,7 +30,7 @@ Conditions:
 
 Globals:
   Function:
-    Runtime: nodejs10.x
+    Runtime: nodejs14.x
     Timeout: 30
     Handler: index.handler
     Tracing: Active
