@@ -2,7 +2,7 @@
 
 A minimalistic ecommerce application for the swedish market. The frontend resides in its own repository: [geja-frontend](https://github.com/Sleavely/geja-frontend)
 
-[![CircleCI](https://circleci.com/gh/Sleavely/geja-cloud/tree/master.svg?style=svg&circle-token=3d9ba39451f3fd7173df433bf09d48bd69e2ecb7)](https://circleci.com/gh/Sleavely/geja-cloud/tree/master)
+[ ![CI status](https://github.com/Sleavely/geja-cloud/actions/workflows/deploy.yml/badge.svg) ](https://github.com/Sleavely/geja-cloud/actions/workflows/deploy.yml "View workflow")
 
 ---
 
